@@ -5,70 +5,100 @@ clear all
 
 pkg load symbolic
 
-syms t
-syms R
-syms C
-syms vi(t)
-syms vo(t)
-syms i(t)
+Z = vpa(0.0);
+U = vpa(1.0);
 
-i(t)=C*diff(vo,t)
+syms R1
+syms R2
+syms R3
+syms R4
+syms R5
+syms R6
+syms R7
+syms Va
+syms Id
+syms Kb
+syms Kc
 
-printf("\n\nKVL equation:\n");
+syms IA
+syms IB
+syms IC
+syms ID
 
-vi(t) = R*i(t)+vo(t)
+syms V1
+syms V2
+syms V3
+syms V4
+syms V5
+syms V6
+syms V7
 
-syms vo_n(t) %natural solution
-syms vo_f(t) %forced solution
+printf("\n\nMesh method matrixes:\n");
 
-printf("\n\nSolution is of the form");
+M = [-R3-R1+R4, R3, -R4, Z; Kb*R3, U-Kb*R3, Z, Z; R4, Z, -Kc-R4+R6+R7, Z; Z, Z, Z, U]
 
-v(t) = vo_n(t) + vo_f(t)
+  I = [IA; IB; IC; ID]
+  
+  y = [-Va; Z; Z; Id]
 
-printf("\n\nNatural solution:\n");
-syms A
-syms wn
-
-vi(t) = 0 %no excitation
-i_n(t) = C*diff(vo_n, t)
+  %%I = solve(A , y)
 
 
-printf("\n\n Natural solution is of the form");
-vo_n(t) = A*exp(wn*t)
+printf("\n\nMesh method matrixes:\n");
 
-R*i_n(t)+vo_n(t) == 0
+N = [U, Z, Z, Z, Z, Z, Z;
+      U/R1, -U/R1-U/R2-U/R3, U/R2, U/R3, Z, Z, Z;
+      Z, Kb+U/R3, -U/R3, -Kb, Z, Z, Z;
+      Z, U/R3, Z, -U/R3-U/R4-U/R5, U/R5, U/R7, -U/R7;
+      Z, -Kb, Z, U/R5+Kb, -U/R5, Z, Z;
+      Z, Z, Z, Z, Z, -U/R6-U/R7, U/R7;
+      Z, Z, Z, U, Z, Kc/R6, -U]
 
-R*C*wn*vo_n(t)+vo_n(t) == 0
+  V = [V1; V2; V3; V4;V5;V6;V7]
+  
+  x = [Va; Z; Z; Id; -Id; Z; Z]
 
-R*C*wn+1==0
+  %%I = solve(A , y)
 
-solve(ans, wn)
 
+  
+printf("\n\n\n\nCALCULO:\n");
 
 %%EXAMPLE NUMERIC COMPUTATIONS
+  R1 = 1.00933568836;
+R2 = 2.0029710407;
+R3 = 3.10902902068; 
+R4 = 4.13001338156;
+R5 = 3.10840903174;
+R6 = 2.07407526395;
+R7 = 1.04985237166;
+Va = 5.09749812451;
+Id = 1.04885339412;
+Kb = 7.12347298707 ;
+Kc = 8.31335357268 ;
 
-R=1e3 %Ohm
-C=100e-9 %F
+printf("\n\nMesh:\n");
+A = [-R3-R1+R4, R3, -R4, 0; Kb*R3, 1-Kb*R3, 0, 0; R4,0, -Kc-R4+R6+R7, 0; 0, 0, 0, 1];
+y = [-Va; 0; 0; Id];
 
-f = 1000 %Hz
-w = 2*pi*f; %rad/s
+I=linsolve(A,y)
 
-%time axis: 0 to 10ms with 1us steps
-t=0:1e-6:10e-3; %s
+  V1=R1*(-I(1))
+  V2=R2*(-I(2))
+  V3=R3*(-I(1)+I(2))
+  V4=R4*(I(1)-I(3))
+  V5=R5*(I(2)-I(4))
+  V6=R6*I(3)
+  V7=R7*I(3)
 
-Zc = 1/(j*w*C)
-Cgain = Zc/(R+Zc)
-Gain = abs(Cgain)
-Phase = angle(Cgain)
-
-vi = 1*cos(w*t);
-vo = Gain*cos(w*t+Phase);
-
-hf = figure ();
-plot (t*1000, vi, "g");
-hold on;
-plot (t*1000, vo, "b");
-
-xlabel ("t[ms]");
-ylabel ("vi(t), vo(t) [V]");
-print (hf, "forced.eps", "-depsc");
+  
+printf("\n\nNode:\n");
+N = [1, 0, 0, 0, 0, 0, 0;
+      1/R1, -1/R1-1/R2-1/R3, 1/R2, 1/R3, 0, 0, 0;
+      0, Kb+1/R3, -1/R3, -Kb, 0, 0, 0;
+      0, 1/R3, 0, -1/R3-1/R4-1/R5, 1/R5, 1/R7, -1/R7;
+      0, -Kb, 0, 1/R5+Kb, -1/R5, 0, 0;
+      0, 0, 0, 0, 0, -1/R6-1/R7, 1/R7;
+      0, 0, 0, 1, 0, Kc/R6, -1];
+x = [Va; 0; 0; Id; -Id; 0; 0];
+ V=linsolve(N,x)
