@@ -46,43 +46,14 @@ op
 echo "********************************************"
 echo  "Operating point"
 echo "********************************************"
-print Vcc
-print @Q1[ic]
-print @Rf[i]
+*print Vcc
+*print @Q1[ic]
+*print @Rf[i]
 
 echo  "op_TAB"
 print all
 echo  "op_END"
 
-
-echo "********************************************"
-echo  "Transient analysis"
-echo "********************************************"
-tran 1e-5 10e-3
-
-hardcopy trans.ps v(coll) v(base)
-echo trans_FIG
-
-echo "********************************************"
-echo  "Frequency analysis"
-echo "********************************************"
-
-ac dec 10 10 100MEG
-
-hardcopy acm.ps db(v(coll)) v(base)
-echo acm_FIG
-hardcopy acp.ps v(base)
-echo acp_FIG
-
-*plot db(v(coll))
-*plot vp(coll)
-
-echo "********************************************"
-echo  "Input impedance"
-echo "********************************************"
-
-hardcopy zim.ps abs(v(coll)/((v(1)-v(2))/1k))
-echo zim_FIG
 
 quit
 .endc
