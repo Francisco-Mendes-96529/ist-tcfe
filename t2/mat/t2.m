@@ -154,13 +154,16 @@ tau = Req*C
    disp("\nvs = 0, and Vx");
 N = [-1./R1-1./R2-1./R3, 1./R2, 1./R3, 0, 0, 0, 0;
        Kb+1./R2, -1./R2, -Kb, 0, 0, 0, 0;
-       1./R3, 0, -1./R3-1./R4-1./R5, 1./R5, 1./R7, -1./R7, 1;
-       -Kb, 0, 1./R5+Kb, -1./R5, 0, 0, -1;
+       1./R3, 0, -1./R3-1./R4-1./R5, 1./R5, 1./R7, -1./R7, -1;
+       -Kb, 0, 1./R5+Kb, -1./R5, 0, 0, 1;
        0, 0, 0, 0, -1./R6-1./R7, 1./R7, 0;
        0, 0, 1., 0, Kd/R6, -1., 0;
        0, 0, 0, 1, 0, -1, 0];
 x = [0; 0; 0; 0; 0; 0; Vx];
 V=linsolve(N,x) %% V2, V3, V5, V6, V7, V8, Ix
+  ;
+V60 = V(4);
+V80 = V(6);
 
 %% Ix = V(7)
 %% Req = Vx/Ix
@@ -169,19 +172,21 @@ V=linsolve(N,x) %% V2, V3, V5, V6, V7, V8, Ix
 
 
    printf("\n\nPasso 3:\n");
+
 #{
   printf("\nt=0\n");
-%%vc0=Vx
-%%v60=V6 = K12_6
-%%v80=V8 = K12_8
-%%K12=vc0
+%% vc0=Vx
+%% v60=V60 = K12_6
+%% v80=V80 = K12_8
+%% K12=vc0
   
    printf("\nt->+oo\n");
-%%vcI=0
-%%viI=0
-%%K1_i=viI=0
-%%K1=vcI
-%%K2=K12-K1
+%% vcI=0
+%% viI=0
+%% K1_i=viI=0
+    
+%% K1=vcI
+%% K2=K12-K1
 %% K2_i=K12_i
   
   #}
@@ -191,7 +196,7 @@ t=0:1e-6:20e-3; %s
 
 
 %%vc(t) = Vx*e;
-v6n = V6 * power(e, (-t/tau));
+v6n = V60 * power(e, (-t/tau));
 %%v8(t) = V8(t=0)*e;
 
 hf = figure ();
@@ -200,7 +205,8 @@ plot (t*1000, v6n, "g");
 xlabel ("t[ms]");
 ylabel ("v_6n(t) [V]");
 print (hf, "v6natural.eps", "-depsc");
-
+close(hf);
+disp("figure saved");
 
 
 
@@ -209,7 +215,7 @@ print (hf, "v6natural.eps", "-depsc");
 f=1000;
 w=2*pi*f;
 phi_vs = pi/2
-vsp= power(e,-j*phi_vs)
+vsp= 1*power(e,-j*phi_vs)
 Zc=1/(j*w*C)
 
 N = [1., 0, 0, 0, 0, 0, 0;
@@ -233,17 +239,33 @@ v8p=V(7);
    
    %%%%%%%%%%%%%%%%%%%%% table;
 
+fmesh = fopen("tabPhasors.tex","w");
+fprintf(fmesh,"\\begin{tabular}{cc}\n");
+fprintf(fmesh,"\\toprule\n");
+fprintf(fmesh,"Phasor & Value \\\\ \\midrule\n");
+fprintf(fmesh,"$\\tilde{V}_1$ & %.5f %+.5fj \\\\\n", real(v1p), imag(v1p));
+fprintf(fmesh,"$\\tilde{V}_2$ & %.5f %+.5fj \\\\\n", real(v2p), imag(v2p));
+fprintf(fmesh,"$\\tilde{V}_3$ & %.5f %+.5fj \\\\\n", real(v3p), imag(v3p));
+fprintf(fmesh,"$\\tilde{V}_5$ & %.5f %+.5fj \\\\\n", real(v5p), imag(v5p));
+fprintf(fmesh,"$\\tilde{V}_6$ & %.5f %+.5fj \\\\\n", real(v6p), imag(v6p));
+fprintf(fmesh,"$\\tilde{V}_7$ & %.5f %+.5fj \\\\\n", real(v7p), imag(v7p));
+fprintf(fmesh,"$\\tilde{V}_8$ & %.5f %+.5fj \\\\ \\bottomrule\n", real(v8p), imag(v8p));
+fprintf(fmesh,"\\end{tabular}");
+fclose(fmesh);
+
 
 
 
    printf("\n\nPasso 5:\n");
 
-  %time axis: -5 to 0ms with 1us steps
+%%%%%%%%%%% t<0
+  %time axis: -5 to -1e-6ms with 1us steps
 tn=-5e-3:1e-6:-1e-6; %s
 
 v6neg = V6+0*tn;
 vsneg = Vs+0*tn;
 
+%%%%%%%%%%% t>=0
 Gain = abs(v6p)
   Phase = angle(v6p)
 
@@ -265,3 +287,22 @@ plot (tfinal*1000, vsfinal, "b");
 xlabel ("t[ms]");
 ylabel ("v6(t), vs(t) [V]");
 print (hf, "final.eps", "-depsc");
+close(hf);
+disp("\nfigure saved");
+
+
+
+
+   printf("\n\nPasso 6:\n");
+f =-20:0.1:120; %dB
+
+dBvs = cos(2*pi*f - pi/2);
+
+hf = figure ();
+plot (f, dBvs, "g");
+
+xlabel ("t[ms]");
+ylabel ("v6(t), vs(t) [V]");
+print (hf, "dB.eps", "-depsc");
+close(hf);
+disp("\nfigure saved");

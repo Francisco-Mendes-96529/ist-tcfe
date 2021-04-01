@@ -9,10 +9,13 @@
 
 * components
 .inc incl/data.inc
+
 *.inc incl/Vs.inc
 *Vx 6 8 0
+
 Vs 1 0 0
 .inc incl/Vx.inc
+*RVx 6b 6 0
 
 
 .control
