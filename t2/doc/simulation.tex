@@ -1,0 +1,24 @@
+\section{Simulation Analysis}
+\label{sec:simulation}
+
+\subsection{Operating Point Analysis}
+
+Table~\ref{tab:op} shows the simulated operating point results for the circuit
+under analysis. Compared to the theoretical analysis results, one notices no differences.
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|l|r|}
+    \hline    
+    {\bf Name} & {\bf Value [A or V]} \\ \hline
+    \input{../sim/op_tab}
+  \end{tabular}
+  \caption{Operating point. A variable preceded by @ is of type {\em current}
+    and expressed in Ampere; other variables are of type {\it voltage} and expressed in
+    Volt.}
+  \label{tab:op}
+\end{table}
+
+There is an additional node 6b, between nodes 6 and 7, because the system needs a voltage source to know the current that is going through the resistor $R_6$ to insert the current-controlled voltage source $V_c$ in the circuit.
+
+

@@ -1,0 +1,32 @@
+\section{Introduction}
+\label{sec:introduction}
+
+% state the learning objective 
+The objective of this laboratory assignment is to study a circuit containing an
+independent voltage source $V_a$, an independent current source $I_d$, a current-controlled voltage source $V_c$, a voltage-controlled current source $I_b$, and 7 resistors. The circuit can be seen in Figure~\ref{fig:t1}. (Note: in the resistors, the current was considered to go through from the right side to the left side, and downwards.)
+
+
+In Section~\ref{sec:analysis}, a theoretical analysis, using the software GNU Octave, of the circuit is
+presented. In Section~\ref{sec:simulation}, the circuit is analyzed by
+simulation using the software Ngspice, and the results are compared to the theoretical results obtained in
+Section~\ref{sec:analysis}. The conclusions of this study are outlined in
+Section~\ref{sec:conclusion}.
+
+
+
+After running the program ``t1\_datagen.py'', the following values were obtained in Table~\ref{tab:constants}.
+
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+    \includegraphics[width=0.9\linewidth]{t1.pdf}
+    \captionsetup{type=figure}
+\caption{Circuit T1.}
+\label{fig:t1}
+\end{minipage}
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+    \input{../mat/tabconstants.tex}
+    \captionsetup{type=table}
+  \caption{Components characteristics.}
+  \label{tab:constants}
+\end{minipage}
