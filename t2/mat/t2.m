@@ -133,6 +133,8 @@ ff = fopen("../sim/incl/Vx.inc","w");
 fprintf(ff, "Vx 6 8 %.11e\n", Vx);
 fclose(ff);
 
+
+disp("\nvs = Vs, sem Vx");
 N = [1., 0, 0, 0, 0, 0, 0, 0;
       1/R1, -1./R1-1./R2-1./R3, 1./R2, 1./R3, 0, 0, 0, 0;
       0, Kb+1./R2, -1./R2, -Kb, 0, 0, 0, 0;
@@ -149,7 +151,7 @@ Req = Vx/Ix
 
 tau = Req*C
 
-     #{ 
+   disp("\nvs = 0, and Vx");
 N = [-1./R1-1./R2-1./R3, 1./R2, 1./R3, 0, 0, 0, 0;
        Kb+1./R2, -1./R2, -Kb, 0, 0, 0, 0;
        1./R3, 0, -1./R3-1./R4-1./R5, 1./R5, 1./R7, -1./R7, 1;
@@ -158,13 +160,12 @@ N = [-1./R1-1./R2-1./R3, 1./R2, 1./R3, 0, 0, 0, 0;
        0, 0, 1., 0, Kd/R6, -1., 0;
        0, 0, 0, 1, 0, -1, 0];
 x = [0; 0; 0; 0; 0; 0; Vx];
- V=linsolve(N,x)
+V=linsolve(N,x) %% V2, V3, V5, V6, V7, V8, Ix
 
-   Ix = V(7)
-   Req = Vx/Ix
+%% Ix = V(7)
+%% Req = Vx/Ix
+%% tau = Req*C
 
-tau = Req*C
-   #}
 
 
    printf("\n\nPasso 3:\n");
@@ -238,7 +239,7 @@ v8p=V(7);
    printf("\n\nPasso 5:\n");
 
   %time axis: -5 to 0ms with 1us steps
-tn=-5e-3:1e-6:0; %s
+tn=-5e-3:1e-6:-1e-6; %s
 
 v6neg = V6+0*tn;
 vsneg = Vs+0*tn;
