@@ -12,10 +12,6 @@
 Vs 1 0 0
 .inc incl/Vx.inc
 
-.op
-
-.end
-
 .control
 
 *makes plots in color

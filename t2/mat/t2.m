@@ -107,11 +107,20 @@ fclose(ff);
 ff = fopen("../sim/incl/Vs.inc","w");
 fprintf(ff, "Vs 1 0 %.11e\n", Vs);
 fclose(ff);
-
+#{
+ff = fopen("../sim/incl/VsPWL.inc","w");
+fprintf(ff, "Vs 1 0 dc pwl(0 %.11e 0ms 0v 20ms 0v)", Vs);
+fclose(ff);
+ff = fopen("../sim/incl/VsACDC.inc","w");
+fprintf(ff, "Vs 1 0 dc pwl(0 %.11e 0ms 0v 20ms 0v) ac 1 sin(0 1 1000)", Vs);
+fclose(ff);
+ #}
 ff = fopen("../sim/incl/C.inc","w");
 fprintf(ff, "C 6 8 %.11e", C);
 fclose(ff);
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 printf("\n\n\nPasso 1:\n");
 N = [1., 0, 0, 0, 0, 0, 0;
       1./R1, -1./R1-1./R2-1./R3, 1./R2, 1./R3, 0, 0, 0;
@@ -122,18 +131,42 @@ N = [1., 0, 0, 0, 0, 0, 0;
       0, 0, 0, 1., 0, Kd/R6, -1.];
 x = [Vs; 0; 0; 0; 0; 0; 0];
  V=linsolve(N,x)
+   ;
+for i=1:7
+  if(abs(V(i))<1e-15)
+    V(i)=0;
+endif
+endfor
 
 V6=V(5);
 V8=V(7);
 
-printf("\n\nPasso 2:\n");
-Vx = V(5)-V(7) %% = V6 - V8
+%%%%%%%%%%%%%%%%%%%%% TABLE
+ff=fopen("nodalAn-tneg.tex","w");
+fprintf(ff,"\\begin{tabular}{cc}\n");
+fprintf(ff,"\\toprule\n");
+fprintf(ff,"Node & Voltage (V)\\\\ \\midrule\n");
+for i=1:6
+  if(i>=4)
+    fprintf(ff,"$V_%d$ & %.5f \\\\\n", i+1,V(i));
+  else
+    fprintf(ff,"$V_%d$ & %.5f \\\\\n", i,V(i));
+endif
+endfor
+fprintf(ff,"$V_%d$ & %.5f \\\\ \\bottomrule\n", 7+1,V(7));
+fprintf(ff,"\\end{tabular}");
+fclose(ff);
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+printf("\n\nPasso 2:\n");
+
+Vx = V6-V8
 ff = fopen("../sim/incl/Vx.inc","w");
 fprintf(ff, "Vx 6 8 %.11e\n", Vx);
 fclose(ff);
-ff = fopen("../sim/incl/Vx-value.inc","w");
-fprintf(ff, "%.11e", Vx);
+ff = fopen("../sim/incl/C-Vx.inc","w");
+fprintf(ff, "C 6 8 %.11e IC=%.11eV", C, Vx);
 fclose(ff);
 
 
@@ -154,7 +187,6 @@ for i=1:7
 endif
 endfor
 
-
 V60 = V(4)
 V80 = V(6)
 
@@ -162,9 +194,33 @@ Ix = V(7)
 Req = Vx/Ix
 tau = Req*C
 
+%%%%%%%%%%%%%%%%%%%%% TABLE
+ff=fopen("nodalAn-t0.tex","w");
+fprintf(ff,"\\begin{tabular}{cc}\n");
+fprintf(ff,"\\toprule\n");
+fprintf(ff,"Node & Voltage (V)\\\\ \\midrule\n");
+fprintf(ff,"$V_%d$ & %.5f \\\\\n", 1,0);
+for i=1:5
+  if(i>=3)
+    fprintf(ff,"$V_%d$ & %.5f \\\\\n", i+2,V(i));
+  else
+    fprintf(ff,"$V_%d$ & %.5f \\\\\n", i+1,V(i));
+endif
+endfor
+fprintf(ff,"$V_%d$ & %.5f \\\\ \\bottomrule\n", 8,V(6));
+fprintf(ff,"\\toprule\n");
+fprintf(ff," & Value \\\\ \\midrule\n");
+fprintf(ff,"$V_x$ & %.5e V \\\\\n", Vx);
+fprintf(ff,"$I_x$ & %.5e A \\\\\n", Ix);
+fprintf(ff,"$R_{eq}$ & %.5e $\\Omega$ \\\\\n", Req);
+fprintf(ff,"$\\tau$ & %.5e $s^{-1}$ \\\\ \\bottomrule\n", tau);
+fprintf(ff,"\\end{tabular}");
+fclose(ff);
 
 
-   printf("\n\nPasso 3:\n");
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+printf("\n\nPasso 3:\n");
 
 #{
   printf("\nt=0\n");
@@ -193,16 +249,17 @@ v6n = V60 * power(e, (-t/tau));
 %%v8(t) = V8(t=0)*e;
 
 hf = figure ();
-plot (t*1000, v6n, "g");
+plot (t*1000, v6n, "r");
 
 xlabel ("t[ms]");
-ylabel ("v_6n(t) [V]");
+ylabel ("v_{6n}(t) [V]");
 print (hf, "v6natural.eps", "-depsc");
 close(hf);
 disp("figure saved");
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    printf("\n\nPasso 4:\n");
 
 f=1000;
@@ -237,8 +294,7 @@ v7p=V(6);
 v8p=V(7);
 
    
-   %%%%%%%%%%%%%%%%%%%%% table;
-
+%%%%%%%%%%%%%%%%%%%%% table;
 fmesh = fopen("tabPhasors.tex","w");
 fprintf(fmesh,"\\begin{tabular}{cc}\n");
 fprintf(fmesh,"\\toprule\n");
@@ -256,11 +312,12 @@ fclose(fmesh);
 
 
 
-   printf("\n\nPasso 5:\n");
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+printf("\n\nPasso 5:\n");
 
 %%%%%%%%%%% t<0
   %time axis: -5 to -1e-6ms with 1us steps
-tn=-5e-3:1e-6:-1e-6; %s
+tn=-5e-3:1e-3:0; %s
 
 v6neg = V6+0*tn;
 vsneg = Vs+0*tn;
@@ -285,7 +342,7 @@ hold on;
 plot (tfinal*1000, vsfinal, "b");
 
 xlabel ("t[ms]");
-ylabel ("v6(t), vs(t) [V]");
+ylabel ("v_6(t), v_s(t) [V]");
 print (hf, "final.eps", "-depsc");
 close(hf);
 disp("\nfigure saved");
@@ -293,7 +350,8 @@ disp("\nfigure saved");
 
 
 
-   printf("\n\nPasso 6:\n");
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+printf("\n\nPasso 6:\n");
 f =-1:0.1:6; %Hz
 w = 2*pi*power(10,f);
 
@@ -302,31 +360,36 @@ Tv6= Tvc;
 
 vs = power(e,j*pi/2) + 0*w;
 vc = Tvc .* vs;
-v6 = Tv6 .* vs;
+v6 = vc + v8p;
+v8 = v6p - vc;
 
 hf = figure ();
-plot (f, 20*log10(abs(vc)), "g");
+plot (f, 20*log10(abs(vc)), "m");
 hold on;
 plot (f, 20*log10(abs(v6)), "b");
 hold on;
 plot (f, 20*log10(abs(vs)), "r");
+hold on;
+plot (f, 20*log10(abs(v8)), "k");
 
-xlabel ("log10(f) [Hz]");
-ylabel ("~vc(f), ~v6(f), ~vs(f) [dB]");
+xlabel ("log_{10}(f) [Hz]");
+ylabel ("v^~_c(f), v^~_6(f), v^~_s(f) [dB]");
 print (hf, "dB.eps", "-depsc");
 close(hf);
 disp("\nfigure saved");
 
 
 hf = figure ();
-plot (f, 180/pi*angle(vc), "g");
+plot (f, 180/pi*angle(vc), "m");
 hold on;
 plot (f, 180/pi*angle(v6), "b");
 hold on;
 plot (f, 180/pi*angle(vs), "r");
+hold on;
+plot (f, 180/pi*angle(v8), "k");
 
-xlabel ("log10(f) [Hz]");
-ylabel ("Phase vc, v6, vs [degrees]");
+xlabel ("log_{10}(f) [Hz]");
+ylabel ("Phase v_c(f), v_6(f), v_s(f) [degrees]");
 print (hf, "phase.eps", "-depsc");
 close(hf);
 disp("\nfigure saved");

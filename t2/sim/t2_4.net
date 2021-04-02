@@ -9,10 +9,9 @@
 
 * components
 .inc incl/data.inc
-*.inc incl/VsPWL.inc
-Vs 1 0 0
-*.inc incl/C.inc
+Vs 1 0 ac 1 sin(0 1 1000)
 .inc incl/C-Vx.inc
+
 
 
 .op
@@ -37,9 +36,9 @@ echo "********************************************"
 echo  "Operating point"
 echo "********************************************"
 
-echo  "op3_TAB"
+echo  "op4_TAB"
 print all
-echo  "op3_END"
+echo  "op4_END"
 
 
 
@@ -48,8 +47,8 @@ echo  "Transient analysis"
 echo "********************************************"
 tran 1e-5 20e-3 uic
 
-hardcopy trans.ps v(6)
-echo trans_FIG
+hardcopy acdc.ps v(6) v(1)
+echo acdc_FIG
 
 
 quit

@@ -9,11 +9,8 @@
 
 * components
 .inc incl/data.inc
-*.inc incl/VsPWL.inc
-Vs 1 0 0
-*.inc incl/C.inc
-.inc incl/C-Vx.inc
-
+.inc incl/C.inc
+Vs 1 0 ac 1 sin(0 1)
 
 .op
 
@@ -33,23 +30,18 @@ set color6=rgb:4/0/0
 
 op
 
-echo "********************************************"
-echo  "Operating point"
-echo "********************************************"
-
-echo  "op3_TAB"
-print all
-echo  "op3_END"
-
-
 
 echo "********************************************"
-echo  "Transient analysis"
+echo  "Frequency analysis"
 echo "********************************************"
-tran 1e-5 20e-3 uic
 
-hardcopy trans.ps v(6)
-echo trans_FIG
+ac dec 10 0.1 1MEG
+
+hardcopy sim-db.ps vdb(6,8) vdb(1) {20*log(abs(v(6)))} vdb(6)
+echo sim-db_FIG
+
+hardcopy sim-phase.ps {180/pi*cph(v(6))} {180/pi*cph(v(1))}
+echo sim-phase_FIG
 
 
 quit

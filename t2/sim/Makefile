@@ -1,4 +1,4 @@
-all: tab1 tab2 tab3
+all: tab1 tab2 tab3 tab4 tab5
 
 tab%: ngs_t2_%.log
 	$(eval NGSFIGS=$(shell grep _FIG $< | sed 's/_FIG//g' | sed ':a;N;$!ba;s/\n/ /g'))

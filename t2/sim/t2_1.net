@@ -12,7 +12,6 @@
 .inc incl/Vs.inc
 .inc incl/C.inc
 
-
 .control
 
 *makes plots in color
