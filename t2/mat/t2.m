@@ -355,6 +355,7 @@ printf("\n\nPasso 6:\n");
 f =-1:0.1:6; %Hz
 w = 2*pi*power(10,f);
 
+
 Tvc= 1 ./ (1 + j*w*Req*C);
 Tv6= Tvc;
 
@@ -362,6 +363,8 @@ vs = power(e,j*pi/2) + 0*w;
 vc = Tvc .* vs;
 v6 = vc + v8p;
 v8 = v6p - vc;
+
+
 
 hf = figure ();
 plot (f, 20*log10(abs(vc)), "m");
@@ -372,6 +375,7 @@ plot (f, 20*log10(abs(vs)), "r");
 hold on;
 plot (f, 20*log10(abs(v8)), "k");
 
+legend("vc","v6","vs","v8");
 xlabel ("log_{10}(f) [Hz]");
 ylabel ("v^~_c(f), v^~_6(f), v^~_s(f) [dB]");
 print (hf, "dB.eps", "-depsc");
@@ -388,6 +392,7 @@ plot (f, 180/pi*angle(vs), "r");
 hold on;
 plot (f, 180/pi*angle(v8), "k");
 
+legend("vc","v6","vs","v8");
 xlabel ("log_{10}(f) [Hz]");
 ylabel ("Phase v_c(f), v_6(f), v_s(f) [degrees]");
 print (hf, "phase.eps", "-depsc");

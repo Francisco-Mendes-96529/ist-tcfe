@@ -10,7 +10,7 @@
 * components
 .inc incl/data.inc
 .inc incl/C.inc
-Vs 1 0 ac 1 sin(0 1)
+Vs 1 0 dc 0 ac 1 sin(0 1)
 
 .op
 
@@ -37,10 +37,10 @@ echo "********************************************"
 
 ac dec 10 0.1 1MEG
 
-hardcopy sim-db.ps vdb(6,8) vdb(1) {20*log(abs(v(6)))} vdb(6)
+hardcopy sim-db.ps vdb(6,8) vdb(1) vdb(6)
 echo sim-db_FIG
 
-hardcopy sim-phase.ps {180/pi*cph(v(6))} {180/pi*cph(v(1))}
+hardcopy sim-phase.ps {180/pi*vp(6)} {180/pi*vp(1)}
 echo sim-phase_FIG
 
 
