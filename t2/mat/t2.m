@@ -109,7 +109,7 @@ fprintf(ff, "Vs 1 0 %.11e\n", Vs);
 fclose(ff);
 
 ff = fopen("../sim/incl/C.inc","w");
-fprintf(ff, "C 6 8 %.11e\n", C);
+fprintf(ff, "C 6 8 %.11e", C);
 fclose(ff);
 
 printf("\n\n\nPasso 1:\n");
@@ -132,24 +132,10 @@ Vx = V(5)-V(7) %% = V6 - V8
 ff = fopen("../sim/incl/Vx.inc","w");
 fprintf(ff, "Vx 6 8 %.11e\n", Vx);
 fclose(ff);
+ff = fopen("../sim/incl/Vx-value.inc","w");
+fprintf(ff, "%.11e", Vx);
+fclose(ff);
 
-
-disp("\nvs = Vs, sem Vx");
-N = [1., 0, 0, 0, 0, 0, 0, 0;
-      1/R1, -1./R1-1./R2-1./R3, 1./R2, 1./R3, 0, 0, 0, 0;
-      0, Kb+1./R2, -1./R2, -Kb, 0, 0, 0, 0;
-      0, 1./R3, 0, -1./R3-1./R4-1./R5, 1./R5, 1./R7, -1./R7, 1;
-      0, -Kb, 0, 1./R5+Kb, -1./R5, 0, 0, -1;
-      0, 0, 0, 0, 0, -1./R6-1./R7, 1./R7, 0;
-      0, 0, 0, 1., 0, Kd/R6, -1., 0;
-      0, 0, 0, 0, 1, 0, -1, 0];
-x = [Vs; 0; 0; 0; 0; 0; 0; 0];
- V=linsolve(N,x)
-
-   Ix = V(8)
-Req = Vx/Ix
-
-tau = Req*C
 
    disp("\nvs = 0, and Vx");
 N = [-1./R1-1./R2-1./R3, 1./R2, 1./R3, 0, 0, 0, 0;
@@ -162,12 +148,19 @@ N = [-1./R1-1./R2-1./R3, 1./R2, 1./R3, 0, 0, 0, 0;
 x = [0; 0; 0; 0; 0; 0; Vx];
 V=linsolve(N,x) %% V2, V3, V5, V6, V7, V8, Ix
   ;
-V60 = V(4);
-V80 = V(6);
+for i=1:7
+  if(abs(V(i))<1e-15)
+    V(i)=0;
+endif
+endfor
 
-%% Ix = V(7)
-%% Req = Vx/Ix
-%% tau = Req*C
+
+V60 = V(4)
+V80 = V(6)
+
+Ix = V(7)
+Req = Vx/Ix
+tau = Req*C
 
 
 
@@ -228,6 +221,13 @@ N = [1., 0, 0, 0, 0, 0, 0;
 x = [vsp; 0; 0; 0; 0; 0; 0];
  V=linsolve(N,x)
    ;
+
+for i=1:7
+	if(abs(real(V(i)))<1e-15)
+	  V(i)=0+j*imag(V(i));
+endif
+endfor
+
 v1p=V(1);
 v2p=V(2);
 v3p=V(3);
@@ -248,8 +248,8 @@ fprintf(fmesh,"$\\tilde{V}_2$ & %.5f %+.5fj \\\\\n", real(v2p), imag(v2p));
 fprintf(fmesh,"$\\tilde{V}_3$ & %.5f %+.5fj \\\\\n", real(v3p), imag(v3p));
 fprintf(fmesh,"$\\tilde{V}_5$ & %.5f %+.5fj \\\\\n", real(v5p), imag(v5p));
 fprintf(fmesh,"$\\tilde{V}_6$ & %.5f %+.5fj \\\\\n", real(v6p), imag(v6p));
-fprintf(fmesh,"$\\tilde{V}_7$ & %.5f %+.5fj \\\\\n", real(v7p), imag(v7p));
-fprintf(fmesh,"$\\tilde{V}_8$ & %.5f %+.5fj \\\\ \\bottomrule\n", real(v8p), imag(v8p));
+fprintf(fmesh,"$\\tilde{V}_7$ & %.5e %+.5fj \\\\\n", real(v7p), imag(v7p));
+fprintf(fmesh,"$\\tilde{V}_8$ & %.5e %+.5fj \\\\ \\bottomrule\n", real(v8p), imag(v8p));
 fprintf(fmesh,"\\end{tabular}");
 fclose(fmesh);
 
@@ -294,15 +294,39 @@ disp("\nfigure saved");
 
 
    printf("\n\nPasso 6:\n");
-f =-20:0.1:120; %dB
+f =-1:0.1:6; %Hz
+w = 2*pi*power(10,f);
 
-dBvs = cos(2*pi*f - pi/2);
+Tvc= 1 ./ (1 + j*w*Req*C);
+Tv6= Tvc;
+
+vs = power(e,j*pi/2) + 0*w;
+vc = Tvc .* vs;
+v6 = Tv6 .* vs;
 
 hf = figure ();
-plot (f, dBvs, "g");
+plot (f, 20*log10(abs(vc)), "g");
+hold on;
+plot (f, 20*log10(abs(v6)), "b");
+hold on;
+plot (f, 20*log10(abs(vs)), "r");
 
-xlabel ("t[ms]");
-ylabel ("v6(t), vs(t) [V]");
+xlabel ("log10(f) [Hz]");
+ylabel ("~vc(f), ~v6(f), ~vs(f) [dB]");
 print (hf, "dB.eps", "-depsc");
+close(hf);
+disp("\nfigure saved");
+
+
+hf = figure ();
+plot (f, 180/pi*angle(vc), "g");
+hold on;
+plot (f, 180/pi*angle(v6), "b");
+hold on;
+plot (f, 180/pi*angle(vs), "r");
+
+xlabel ("log10(f) [Hz]");
+ylabel ("Phase vc, v6, vs [degrees]");
+print (hf, "phase.eps", "-depsc");
 close(hf);
 disp("\nfigure saved");

@@ -10,7 +10,7 @@
 * components
 .inc incl/data.inc
 Vs 1 0 0
-.inc incl/Vx.inc
+C 6 8 1e-6 IC=8V
 
 .op
 
@@ -34,9 +34,20 @@ echo "********************************************"
 echo  "Operating point"
 echo "********************************************"
 
-echo  "op2_TAB"
+echo  "op3_TAB"
 print all
-echo  "op2_END"
+echo  "op3_END"
+
+
+
+echo "********************************************"
+echo  "Transient analysis"
+echo "********************************************"
+tran 1e-4 20e-3 0 .IC
+
+hardcopy trans.ps v(6) v(8)
+echo trans_FIG
+
 
 
 quit
