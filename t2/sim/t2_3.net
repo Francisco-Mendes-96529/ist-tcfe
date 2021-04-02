@@ -9,8 +9,15 @@
 
 * components
 .inc incl/data.inc
+*.inc incl/VsPWL.inc
 Vs 1 0 0
-.inc incl/Vx.inc
+*.inc incl/C.inc
+.inc incl/C-Vx.inc
+
+
+.op
+
+.end
 
 .control
 
@@ -30,9 +37,19 @@ echo "********************************************"
 echo  "Operating point"
 echo "********************************************"
 
-echo  "op2_TAB"
+echo  "op3_TAB"
 print all
-echo  "op2_END"
+echo  "op3_END"
+
+
+
+echo "********************************************"
+echo  "Transient analysis"
+echo "********************************************"
+tran 1e-5 20e-3 uic
+
+hardcopy trans.ps v(6)
+echo trans_FIG
 
 
 quit
