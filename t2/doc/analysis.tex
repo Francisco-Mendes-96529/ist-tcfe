@@ -1,102 +1,16 @@
 \section{Theoretical Analysis}
 \label{sec:analysis}
 
-In this section, the circuit shown in Figure~\ref{fig:t1} is analyzed
-theoretically, using the mesh method and the nodal method.
+In this section, the circuit shown in Figure~\ref{fig:t2} is analysed
+theoretically, according to the steps mentioned in Section~\ref{sec:introduction}.
 
-\subsection{Mesh Analysis}
-The circuit was analyzed using the 4 elemental meshes, as shown in Figure~\ref{fig:mesh}
+\subsection{Step 1}
+The circuit was analyzed for $t<0$.
 
-\begin{figure}[ht!]
-  \centering
-  \includegraphics[width=0.4\textwidth]{t1-mesh.pdf}
-  \caption{Currents through the elemental meshes.}
-  \label{fig:mesh}
-\end{figure}
+Resulting in the following matrix system:
 
-Resulting in the following equations:
-
-\begin{equation}\label{meshEq}
-  \begin{cases}
-    -R_3(-I_A + I_B) - R_1(-I_A) + V_a + R_4(I_A-I_C) = 0 \\
-    I_B = I_b\quad (by\ observation) \\
-    -V_c - R_4(-I_C + I_A) + R_6I_C+ R_7I_C = 0 \\
-    I_D = I_d\quad (by\ observation) \\
-    I_b = K_bV_b = K_bR_3(-I_A + I_B) \\
-    V_C = K_CI_C \\
-  \end{cases}
-\end{equation}
-
-Simplifying in the next matrix system:
 
 \begin{equation}\label{meshM}
-  \begin{bmatrix}
-    R_3+R_1+R_4 & -R_3 & -R_4 & 0 \\
-    K_bR_3 & 1-K_bR_3 & 0 & 0 \\
-    -R_4 & 0 & -K_C + R_4+R_6+R_7 & 0 \\
-    0 & 0 & 0 & 1\\
-  \end{bmatrix}
-  \begin{bmatrix}
-    I_A\\
-    I_B\\
-    I_C\\
-    I_D\\
-  \end{bmatrix}
-  =
-  \begin{bmatrix}
-    -V_a\\
-    0\\
-    0\\
-    I_d\\
-  \end{bmatrix}
-\end{equation}
-
-Solving the system~\ref{meshM} results in the values in the Table~\ref{tab:mesh}.
-
-\begin{table}[ht!]
-  \centering
-  \input{../mat/tabmesh.tex}
-  \caption{Currents of each mesh.}
-  \label{tab:mesh}
-\end{table}
-\FloatBarrier
-
-
-
-
-
-
-\subsection{Nodal Analysis}
-The circuit was analyzed using 7 nodes and the GND node, as shown in Figure~\ref{fig:node}
-
-\begin{figure}[ht!]
-  \centering
-  \includegraphics[width=0.4\textwidth]{t1-node.pdf}
-  \caption{Voltage in each node.}
-  \label{fig:node}
-\end{figure}
-
-Resulting in the following equations:
-
-\begin{equation}\label{nodeEq}
-  \begin{cases}
-    KCL\ equations:\\
-    node\ 2\to (V_1-V_2)G_1 - (V_2-V_3)G_2 - (V_2-V_4)G_3 = 0\\
-    node\ 3\to (V_2-V_3)G_2 + I_b = 0\\
-    node\ 4\to (V_2-V_4)G_3 + (-V_4)G_4 - (V_4-V_5)G_5 - I_{V_C} = 0\\
-    node\ 5\to (V_4-V_5)G_5 + I_d - I_b = 0\\
-    node\ 6\to (-V_6)G_6 - (V_6-V_7)G_7 = 0\\
-    \\
-    Additional\ equations:\\
-    V_1 = V_a\\
-    I_b = K_b(V_2-V_4)\\
-    I_{V_C} = I_d - (V_6-V_7)G_7\\
-  \end{cases}
-\end{equation}
-
-Simplifying in the next matrix system:
-
-\begin{equation}\label{nodeM}
   \begin{bmatrix}
     1 & 0 & 0 & 0 & 0 & 0 & 0 \\
     G_1 & -G_1-G_2-G_3 & G_2 & G_3 & 0 & 0 & 0 \\
@@ -104,48 +18,192 @@ Simplifying in the next matrix system:
     0 & G_3 & 0 & -G_3-G_4-G_5 & G_5 & G_7 & -G_7 \\
     0 & -K_b & 0 & G_5+K_b & -G_5 & 0 & 0 \\
     0 & 0 & 0 & 0 & 0 & -G_6-G_7 & G_7 \\
-    0 & 0 & 0 & 1 & 0 & K_cG_6 & -1 \\
+    0 & 0 & 0 & 1 & 0 & K_dG_6 & -1 \\
   \end{bmatrix}
   \begin{bmatrix}
     V_1\\
     V_2\\
     V_3\\
-    V_4\\
     V_5\\
     V_6\\
     V_7\\
+    V_8\\
   \end{bmatrix}
   =
   \begin{bmatrix}
-    V_a\\
+    V_s\\
     0\\
     0\\
-    I_d\\
-    -I_d\\
+    0\\
+    0\\
     0\\
     0\\
   \end{bmatrix}
 \end{equation}
 
-Solving the system~\ref{nodeM} results in the values in the Table~\ref{tab:node}.
+Solving the system~\ref{meshM} results in the values in the Table~\ref{tab:teo1}.
 
 \begin{table}[ht!]
   \centering
-  \input{../mat/tabnode.tex}
-  \caption{Voltage in each node.}
-  \label{tab:node}
+  \begin{tabular}{cc}
+    %\input{../mat/nodalAn-tneg.tex}
+  \end{tabular}
+  \caption{Voltages in each node, for $t<0$.}
+  \label{tab:teo1}
+\end{table}
+
+
+
+
+
+
+
+\subsection{Step 2}
+The circuit was analyzed, for $t=0$, as shown in Figure~\ref{fig:t2-2}.
+
+
+{\color{red}
+\Huge EXPLAIN
+}
+
+\begin{figure}[ht!]
+  \centering
+  %\includegraphics[width=0.4\textwidth]{t2-2.pdf}
+  \caption{Circuit, for $t=0$.}
+  \label{fig:t2-2}
+\end{figure}
+
+Resulting in the following matrix system:
+
+\begin{equation}\label{nodeM}
+  \begin{bmatrix}
+    -G_1-G_2-G_3 & G_2 & G_3 & 0 & 0 & 0 & 0 \\
+    K_b+G_2 & -G_2 & -K_b & 0 & 0 & 0 & 0 \\
+    G_3 & 0 & -G_3-G_4-G_5 & G_5 & G_7 & -G_7 & -1 \\
+    -K_b & 0 & G_5+K_b & -G_5 & 0 & 0 & 1 \\
+    0 & 0 & 0 & 0 & -G_6-G_7 & G_7 & 0\\
+    0 & 0 & 1 & 0 & K_dG_6 & -1 & 0\\
+    0 & 0 & 0 & 1 & 0 & -1 & 0\\
+  \end{bmatrix}
+  \begin{bmatrix}
+    V_2\\
+    V_3\\
+    V_5\\
+    V_6\\
+    V_7\\
+    V_8\\
+    I_x\\
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    0\\
+    0\\
+    0\\
+    0\\
+    0\\
+    0\\
+    V_x\\
+  \end{bmatrix}
+\end{equation}
+
+Solving the system~\ref{nodeM} results in the values in the Table~\ref{tab:teo2}.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{cc}
+    %\input{../mat/nodalAn-t0.tex}
+  \end{tabular}
+  \caption{Voltage in each node, for $t=0$.}
+  \label{tab:teo2}
 \end{table}
 \FloatBarrier
 
 
 
-\subsection{Results of both methods}
-The voltage drop and currents of each resistor were the same of both methods and are shown in the Table~\ref{tab:IeV}.
+\subsection{Step 3}
+The circuit was analyzed to determine the natural response in node 6, $v_{6n}(t)$, for $t\in [0,20]ms$.
+
+{\color{red}
+\Huge EXPLAIN
+}
+bla bla, Figure~\ref{fig:v6n}
+
+\begin{figure}[ht!]
+  \centering
+  %\includegraphics[width=0.7\textwidth]{../mat/v6natural.eps}
+  \caption{Natural response, $v_{6n}(t)$, for $t\in [0,20]ms$.}
+  \label{fig:v6n}
+\end{figure}
+\FloatBarrier
+
+
+
+
+
+\subsection{Step 4}
+Analyze the circuit to calculate the phasors in each node, for $t\in [0,20]ms$ and $f=1kHz$.
+
+{\color{red}
+\Huge EXPLAIN
+}
+bla bla, Table~\ref{tab:teo4}
+
 
 \begin{table}[ht!]
   \centering
-  \input{../mat/tabIeV.tex}
-  \caption{Voltage drop and Currents of each resistor.}
-  \label{tab:IeV}
+  \begin{tabular}{cc}
+    %\input{../mat/tabPhasors.tex}
+  \end{tabular}
+  \caption{Phasors in each node, for $t\in [0,20]ms$ and $f=1kHz$.}
+  \label{tab:teo4}
 \end{table}
 \FloatBarrier
+
+
+
+
+
+\subsection{Step 5}
+The circuit was analyzed to determine the total solution (natural+forced) in node 6, $v_6(t)$, for $t\in [-5,20]ms$ and $f=1kHz$.
+
+{\color{red}
+\Huge EXPLAIN
+}
+bla bla, Figure~\ref{fig:v6}
+
+
+\begin{figure}[ht!]
+  \centering
+  %\includegraphics[width=0.7\textwidth]{../mat/final.eps}
+  \caption{Total solution, $v_{6}(t)$, for $t\in [-5,20]ms$ and $f=1kHz$.}
+  \label{fig:v6}
+\end{figure}
+\FloatBarrier
+
+
+
+
+
+\subsection{Step 6}
+Determine the frequency responses $v_C(f),\ v_6(f)$, for the frequency range 0.1 Hz to 1 MHz.
+
+{\color{red}
+\Huge EXPLAIN
+}
+bla bla, Figures~\ref{fig:teo-db} and \ref{fig:teo-phase}.
+
+
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+    %\includegraphics[width=0.9\linewidth]{../mat/dB.eps}
+    \captionsetup{type=figure}
+\caption{Frequency logarithmic scale, magnitude in dB.}
+\label{fig:teo-db}
+\end{minipage}
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+    %\includegraphics[width=0.9\linewidth]{../mat/phase.eps}
+    \captionsetup{type=figure}
+  \caption{Frequency logarithmic scale, phase in degrees.}
+  \label{fig:teo-phase}
+\end{minipage}

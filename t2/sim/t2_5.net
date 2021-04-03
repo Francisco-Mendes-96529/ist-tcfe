@@ -40,7 +40,7 @@ ac dec 10 0.1 1MEG
 hardcopy sim-db.ps vdb(6,8) vdb(1) vdb(6)
 echo sim-db_FIG
 
-hardcopy sim-phase.ps {180/pi*vp(6)} {180/pi*vp(1)}
+hardcopy sim-phase.ps {180/pi*vp(6)+90} {180/pi*vp(1)+90}
 echo sim-phase_FIG
 
 

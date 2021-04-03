@@ -364,7 +364,7 @@ N = [Kb+1./R2, -1./R2, -Kb, 0;
      0, 0, 1., Kd/R6-R7/R6-1.];
 b = [0; 0; -vsp/R1; 0];
 
-V=linsolve(N,b);
+V=linsolve(N,b); % v2, v3, v5, v7
  
 v8 = R7*(1./R1+1./R6)*V(4) + 0*Zc;
 v6 = ((1./R5+Kb)*V(3)-Kb*V(1)+ (v8 ./ Zc)) ./ (1./R5 + 1. ./ Zc);
