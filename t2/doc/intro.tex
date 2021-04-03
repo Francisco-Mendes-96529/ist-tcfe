@@ -3,7 +3,7 @@
 
 % state the learning objective 
 The purpose of this laboratory assignment is to study a circuit that can be observed in Figure~\ref{fig:t2} containing an independent voltage source $V_s$, a current-controlled voltage source $V_d$, a voltage-controlled current source $I_b$,  seven resistors, and one capacitor $C$. The voltage $V_s$ varies in time according to the expression~1. (Note: in the resistors, the current was considered to go through from the right side to the left side, and downwards).
-\begin{gather}\label{eq:vs} 
+\begin{gather}\label{eq:vs}
     v_s(t) = V_s\,u(-t) + \sin(2\pi f\,t)\,u(t) \\
     u(t) =
     \begin{cases}
@@ -19,23 +19,23 @@ In Section~\ref{sec:simulation}, the circuit is analyzed by
 simulation using the software Ngspice, and the results are compared to the theoretical results obtained in
 Section~\ref{sec:analysis}. 
 
+In Section~\ref{sec:comparison}, is done a more detailed comparison between the results obtained by both analyses, theoretical and simulation.
+
 The conclusions of this study are outlined in
 Section~\ref{sec:conclusion}.
-
-
 
 After running the program ``t2\_datagen.py'', the following values were obtained in Table~\ref{tab:constants}.
 
 \begin{minipage}[b]{0.48\textwidth}
 \centering
-    %\includegraphics[width=0.9\linewidth]{t2.pdf}
+    \includegraphics[width=0.9\linewidth]{t2.pdf}
     \captionsetup{type=figure}
 \caption{Circuit T2.}
 \label{fig:t2}
 \end{minipage}
 \begin{minipage}[b]{0.48\textwidth}
 \centering
-   %\input{../mat/tabconstants.tex}
+   \input{../mat/tabconstants.tex}
     \captionsetup{type=table}
   \caption{Components characteristics.}
   \label{tab:constants}

@@ -33,15 +33,6 @@ set color6=rgb:4/0/0
 
 op
 
-echo "********************************************"
-echo  "Operating point"
-echo "********************************************"
-
-echo  "op3_TAB"
-print all
-echo  "op3_END"
-
-
 
 echo "********************************************"
 echo  "Transient analysis"

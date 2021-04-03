@@ -129,7 +129,7 @@ N = [1., 0, 0, 0, 0, 0, 0;
       0, -Kb, 0, 1./R5+Kb, -1./R5, 0, 0;
       0, 0, 0, 0, 0, -1./R6-1./R7, 1./R7;
       0, 0, 0, 1., 0, Kd/R6, -1.];
-x = [Vs; 0; 0; 0; 0; 0; 0];
+x = [Vs; 0; 0; 0; 0; 0; 0];  %%%%% v1 v2 v3 v5 v6 v7 v8
  V=linsolve(N,x)
    ;
 for i=1:7
@@ -141,19 +141,38 @@ endfor
 V6=V(5);
 V8=V(7);
 
+I1 = (V(1)-V(2))/R1;
+I2 = (V(2)-V(3))/R2;
+I3 = (V(2)-V(4))/R3;
+I4 = (-V(4))/R4;
+I5 = (V(4)-V(5))/R5;
+I6 = (-V(6))/R6;
+I7 = (V(6)-V(7))/R7;
+Is = -I1;
+Ib = -I2;
+Ivd = -I7;
+IC = 0;
+I = [I1, I2, I3, I4, I5, I6, I7];
+
 %%%%%%%%%%%%%%%%%%%%% TABLE
 ff=fopen("nodalAn-tneg.tex","w");
 fprintf(ff,"\\begin{tabular}{cc}\n");
 fprintf(ff,"\\toprule\n");
-fprintf(ff,"Node & Voltage (V)\\\\ \\midrule\n");
-for i=1:6
+fprintf(ff,"Name & Value [A or V]\\\\ \\midrule\n");
+fprintf(ff,"$I_c$ & %.5e \\\\\n",IC);
+fprintf(ff,"$I_b$ & %.5e \\\\\n",Ib);
+for i=1:7
+    fprintf(ff,"$I_%d$ & %.5e \\\\\n", i,I(i));
+endfor
+for i=1:7
   if(i>=4)
-    fprintf(ff,"$V_%d$ & %.5f \\\\\n", i+1,V(i));
+    fprintf(ff,"$V_%d$ & %.5e \\\\\n", i+1,V(i));
   else
-    fprintf(ff,"$V_%d$ & %.5f \\\\\n", i,V(i));
+    fprintf(ff,"$V_%d$ & %.5e \\\\\n", i,V(i));
 endif
 endfor
-fprintf(ff,"$V_%d$ & %.5f \\\\ \\bottomrule\n", 7+1,V(7));
+fprintf(ff,"$I_{V_d}$ & %.5e \\\\\n", Ivd);
+fprintf(ff,"$I_{V_s}$ & %.5e \\\\ \\bottomrule\n", Is);
 fprintf(ff,"\\end{tabular}");
 fclose(ff);
 
@@ -254,6 +273,7 @@ plot (t*1000, v6n, "r");
 xlabel ("t[ms]");
 ylabel ("v_{6n}(t) [V]");
 print (hf, "v6natural.eps", "-depsc");
+system("epstopdf v6natural.eps");
 close(hf);
 disp("figure saved");
 
@@ -299,13 +319,13 @@ fmesh = fopen("tabPhasors.tex","w");
 fprintf(fmesh,"\\begin{tabular}{cc}\n");
 fprintf(fmesh,"\\toprule\n");
 fprintf(fmesh,"Phasor & Value \\\\ \\midrule\n");
-fprintf(fmesh,"$\\tilde{V}_1$ & %.5f %+.5fj \\\\\n", real(v1p), imag(v1p));
-fprintf(fmesh,"$\\tilde{V}_2$ & %.5f %+.5fj \\\\\n", real(v2p), imag(v2p));
-fprintf(fmesh,"$\\tilde{V}_3$ & %.5f %+.5fj \\\\\n", real(v3p), imag(v3p));
-fprintf(fmesh,"$\\tilde{V}_5$ & %.5f %+.5fj \\\\\n", real(v5p), imag(v5p));
-fprintf(fmesh,"$\\tilde{V}_6$ & %.5f %+.5fj \\\\\n", real(v6p), imag(v6p));
-fprintf(fmesh,"$\\tilde{V}_7$ & %.5e %+.5fj \\\\\n", real(v7p), imag(v7p));
-fprintf(fmesh,"$\\tilde{V}_8$ & %.5e %+.5fj \\\\ \\bottomrule\n", real(v8p), imag(v8p));
+fprintf(fmesh,"$\\tilde{V}_1$ & %.5f %+.5f j \\\\\n", real(v1p), imag(v1p));
+fprintf(fmesh,"$\\tilde{V}_2$ & %.5f %+.5f j \\\\\n", real(v2p), imag(v2p));
+fprintf(fmesh,"$\\tilde{V}_3$ & %.5f %+.5f j \\\\\n", real(v3p), imag(v3p));
+fprintf(fmesh,"$\\tilde{V}_5$ & %.5f %+.5f j \\\\\n", real(v5p), imag(v5p));
+fprintf(fmesh,"$\\tilde{V}_6$ & %.5f %+.5f j \\\\\n", real(v6p), imag(v6p));
+fprintf(fmesh,"$\\tilde{V}_7$ & %.5f %+.5f j \\\\\n", real(v7p), imag(v7p));
+fprintf(fmesh,"$\\tilde{V}_8$ & %.5f %+.5f j \\\\ \\bottomrule\n", real(v8p), imag(v8p));
 fprintf(fmesh,"\\end{tabular}");
 fclose(fmesh);
 
@@ -341,9 +361,11 @@ plot (tfinal*1000, v6final, "g");
 hold on;
 plot (tfinal*1000, vsfinal, "b");
 
+legend("v6","vs");
 xlabel ("t[ms]");
 ylabel ("v_6(t), v_s(t) [V]");
 print (hf, "final.eps", "-depsc");
+system("epstopdf final.eps");
 close(hf);
 disp("\nfigure saved");
 
@@ -366,19 +388,11 @@ b = [0; 0; -vsp/R1; 0];
 
 V=linsolve(N,b); % v2, v3, v5, v7
  
-v8 = R7*(1./R1+1./R6)*V(4) + 0*Zc;
+v8 = R7*(1./R7+1./R6)*V(4) + 0*Zc;
 v6 = ((1./R5+Kb)*V(3)-Kb*V(1)+ (v8 ./ Zc)) ./ (1./R5 + 1. ./ Zc);
 vc = v6 - v8;
 vs = power(e,j*pi/2) + 0*w;
 
-#{
-Tvc= 1 ./ (1 + j*w*Req*C);
-Tv6= Tvc;
-
-vs = power(e,j*pi/2) + 0*w;
-vc = Tvc .* vs;
-v6 = vc + v8p;
-#}
 
 hf = figure ();
 plot (f, 20*log10(abs(vc)), "m");
@@ -391,6 +405,7 @@ legend("vc","v6","vs");
 xlabel ("log_{10}(f) [Hz]");
 ylabel ("v^~_c(f), v^~_6(f), v^~_s(f) [dB]");
 print (hf, "dB.eps", "-depsc");
+system("epstopdf dB.eps");
 close(hf);
 disp("\nfigure saved");
 
@@ -414,5 +429,6 @@ legend("vc","v6","vs");
 xlabel ("log_{10}(f) [Hz]");
 ylabel ("Phase v_c(f), v_6(f), v_s(f) [degrees]");
 print (hf, "phase.eps", "-depsc");
+system("epstopdf phase.eps");
 close(hf);
 disp("\nfigure saved");
