@@ -115,7 +115,25 @@ The time constant $\tau$ can only be calculated if we know the resistor seen by 
 
 \vspace{-12pt}
 \subsection{Step 3}
-The circuit was analyzed to determine the natural response in node 6, $v_{6n}(t)$, for $t\in [0,20]ms$. The obtained plot can be observed in Figure~\ref{fig:v6n}.
+The circuit was analyzed to determine the natural response in node 6, $v_{6n}(t)$, for $t\in [0,20]ms$.
+
+With the previous step, we get the values $v_6(0) = v_c(0)$ and $v_8(0) = 0V$, and the value for the time constant $\tau$. So, it is only needed to analize the circuit for $t\to+\infty$:
+
+\begin{equation}\label{eq:inf}
+  \frac{dv_{cn}}{dt}=0 \Rightarrow i_{cn}(+\infty) = 0 A
+\end{equation}
+
+By the equation~\ref{eq:inf} and since there is no independent sources, it is posible to deduce that the voltage in all nodes are 0V. Therefore:
+
+\begin{equation}\label{eq:v6n}
+  v_{6n}(t) = v_{cn}(t) =
+  \begin{cases}
+    v_6(0),\quad t<0s\\
+    v_6(0)e^{-\frac{t}{\tau}}, \quad t\geqslant0s\\
+  \end{cases}
+\end{equation}
+
+The obtained plot can be observed in Figure~\ref{fig:v6n}.
 
 \begin{figure}[ht!]
   \centering
@@ -131,7 +149,7 @@ The circuit was analyzed to determine the natural response in node 6, $v_{6n}(t)
 
 \vspace{-12pt}
 \subsection{Step 4}
-Using the phasor voltage $v_s=\exp{(-j\frac{\pi}{2})}$, and replacing C with its impedance $Z_C$,
+Using the phasor voltage $\tilde{V}_s=\exp{(-j\frac{\pi}{2})}$, and replacing C with its impedance $Z_C$,
 \begin{equation}
     Z_C=\frac{1}{jwC}
     \label{Zc}
