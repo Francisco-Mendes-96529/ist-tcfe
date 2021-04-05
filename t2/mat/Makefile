@@ -6,6 +6,6 @@ octave.log: t2.m ../sim/incl ../data.txt
 
 clean:
 	@rm -f octave.log octave-workspace *.eps *~ *.tex *.log *.aux *.pdf
-	@rm -r ../sim/incl
+	@rm -r -f ../sim/incl
 
 .PHONY: clean
