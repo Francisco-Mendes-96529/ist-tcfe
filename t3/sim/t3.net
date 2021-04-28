@@ -1,0 +1,71 @@
+*
+* NGSPICE simulation script
+* BJT amp with feedback
+*
+
+* forces current values to be saved
+.options savecurrents
+
+
+
+.param xC=6u
+.param xR=3k
+*.param xD=17
+
+
+* voltage source
+Vac T1 T0 ac 1 sin(0 39 50)
+
+* bridge rectifier
+Db1 T1 1 Default
+Db2 T0 1 Default
+Db3 0 T0 Default
+Db4 0 T1 Default
+
+Cc 1 0 xC
+
+* voltage regulator
+Rr 1 vo xR
+Dr17 vo 0 N17
+
+.model Default D
+.model N17 D(N=17)
+
+
+
+
+.tran 2e-4 0.4 0.2
+.measure tran media AVG v(vo) from=.2 to=.4
+.measure tran media0 param='abs(media-12)'
+.measure tran maxvo MAX v(vo) from=.2 to=.4
+.measure tran minvo MIN v(vo) from=.2 to=.4
+.measure tran ripple param='maxvo - minvo'
+
+.param cost='(17+4)*0.1 + xC*10^6 + xR*10^(-3)'
+.measure tran merit param='1 / (cost * (ripple + media0 + 10^(-6)))'
+
+.control
+run
+
+*makes plots in color
+set hcopypscolor=0
+set color0=white
+set color1=black
+set color2=red
+set color3=blue
+set color4=violet
+set color5=rgb:3/8/0
+set color6=rgb:4/0/0
+
+
+
+let vo = v(vo)
+
+hardcopy dc.ps (vo-12) vo
+echo dc_FIG
+
+
+quit
+.endc
+
+.end

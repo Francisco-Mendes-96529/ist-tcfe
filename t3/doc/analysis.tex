@@ -1,0 +1,278 @@
+\section{Theoretical Analysis}
+\label{sec:analysis}
+
+In this section, the circuit shown in Figure~\ref{fig:t2} is analysed
+theoretically, according to the steps mentioned in Section~\ref{sec:introduction}.
+
+\subsection{Step 1}
+The circuit was analyzed for $t<0$.
+
+Resulting in the following matrix system:
+
+\begin{equation}\label{step1}
+  \begin{bmatrix}
+    1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    G_1 & -G_1-G_2-G_3 & G_2 & G_3 & 0 & 0 & 0 \\
+    0 & K_b+G_2 & -G_2 & -K_b & 0 & 0 & 0 \\
+    0 & G_3 & 0 & -G_3-G_4-G_5 & G_5 & G_7 & -G_7 \\
+    0 & -K_b & 0 & G_5+K_b & -G_5 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & -G_6-G_7 & G_7 \\
+    0 & 0 & 0 & 1 & 0 & K_dG_6 & -1 \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    V_1\\
+    V_2\\
+    V_3\\
+    V_5\\
+    V_6\\
+    V_7\\
+    V_8\\
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    V_s\\
+    0\\
+    0\\
+    0\\
+    0\\
+    0\\
+    0\\
+  \end{bmatrix}
+\end{equation}
+
+Solving the system~\ref{step1} results in the values in the Table~\ref{tab:teo1}.
+
+\begin{table}[ht!]
+  \centering
+    \input{../mat/nodalAn-tneg.tex}
+  \caption{Values computed for $t<0$.}
+  \label{tab:teo1}
+\end{table}
+
+
+
+
+\subsection{Step 2}
+The circuit was analyzed, for $t=0$, as shown in Figure~\ref{fig:t2-2}. In order to do that, $V_s$ was considered to be zero and the capacitor was replaced with a voltage source $V_x=V(6)-V(8)$, being $V_6$ and $V_8$ the voltages in the nodes 6 and 8. In this case, $V_x$ can be interpreted as a Thévenin voltage, therefore $I_x$, the Norton current equivalent, has to be from the negative node to the positive node of the voltage source $V_x$.
+
+
+A nodal analysis in the circuit resulted in the following matrix system:
+
+\begin{equation}\label{step2}
+  \begin{bmatrix}
+    -G_1-G_2-G_3 & G_2 & G_3 & 0 & 0 & 0 & 0 \\
+    K_b+G_2 & -G_2 & -K_b & 0 & 0 & 0 & 0 \\
+    G_3 & 0 & -G_3-G_4-G_5 & G_5 & G_7 & -G_7 & -1 \\
+    -K_b & 0 & G_5+K_b & -G_5 & 0 & 0 & 1 \\
+    0 & 0 & 0 & 0 & -G_6-G_7 & G_7 & 0\\
+    0 & 0 & 1 & 0 & K_dG_6 & -1 & 0\\
+    0 & 0 & 0 & 1 & 0 & -1 & 0\\
+  \end{bmatrix}
+  \begin{bmatrix}
+    V_2\\
+    V_3\\
+    V_5\\
+    V_6\\
+    V_7\\
+    V_8\\
+    I_x\\
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    0\\
+    0\\
+    0\\
+    0\\
+    0\\
+    0\\
+    V_x\\
+  \end{bmatrix}
+\end{equation}
+
+Solving the system~\ref{step2} results in the values in the Table~\ref{tab:teo2}. The equivalent resistor $R_{eq}$ was obtained by calculating $\frac{V_x}{I_x}$ and the time constant $\tau=R_{eq}C$.
+
+
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+    \includegraphics[width=0.9\linewidth]{t2-2.pdf}
+    \captionsetup{type=figure}
+\caption{Circuit, for $t=0$.}
+\label{fig:t2-2}
+\end{minipage}
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+    \input{../mat/nodalAn-t0.tex}
+    \captionsetup{type=table}
+  \caption{Values computed, for $t=0$.}
+  \label{tab:teo2}
+\end{minipage}
+
+
+
+The time constant $\tau$ can only be calculated if we know the resistor seen by the capacitor terminals when all independent sources (in this case $V_s$) are switched off. In the moment of transition $t=0$, $V_s$ is considered to be zero even though $u(t)$ is 1 because that is the value it will take at $t=\varepsilon$, for a very small $\varepsilon > 0$.
+
+\FloatBarrier
+
+\vspace{-12pt}
+\subsection{Step 3}
+The circuit was analyzed to determine the natural response in node 6, $v_{6n}(t)$, for $t\in [0,20]ms$.
+
+With the previous step, we get the values $v_6(0) = v_c(0)$ and $v_8(0) = 0V$, and the value for the time constant $\tau$. So, it is only needed to analize the circuit for $t\to+\infty$:
+
+\begin{equation}\label{eq:inf}
+  \frac{dv_{cn}}{dt}=0 \Rightarrow i_{cn}(+\infty) = 0 A
+\end{equation}
+
+By the equation~\ref{eq:inf} and since there is no independent sources, it is posible to deduce that the voltage in all nodes are 0V. Therefore:
+
+\begin{equation}\label{eq:v6n}
+  v_{6n}(t) = v_{cn}(t) =
+  \begin{cases}
+    v_6(0),\quad t<0s\\
+    v_6(0)e^{-\frac{t}{\tau}}, \quad t\geqslant0s\\
+  \end{cases}
+\end{equation}
+
+The obtained plot can be observed in Figure~\ref{fig:v6n}.
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=0.6\textwidth]{../mat/v6natural.pdf}
+  \caption{Natural response, $v_{6n}(t)$, for $t\in [0,20]ms$.}
+  \label{fig:v6n}
+\end{figure}
+\FloatBarrier
+
+
+
+
+
+\vspace{-12pt}
+\subsection{Step 4}
+Using the phasor voltage $\tilde{V}_s=\exp{(-j\frac{\pi}{2})}$, and replacing C with its impedance $Z_C$,
+\begin{equation}
+    Z_C=\frac{1}{jwC}
+    \label{Zc}
+\end{equation}
+
+\noindent the circuit was analyzed to calculate the phasors in each node, for the time interval $t\in [0,20]ms$ and the frequency $f=1kHz$.
+Solving the matrix system~\ref{step4} the results accquired are shown in Table~\ref{tab:teo4}.
+
+\begin{equation}\label{step4}
+  \begin{bmatrix}
+    1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    Y_1 & -Y_1-Y_2-Y_3 & Y_2 & Y_3 & 0 & 0 & 0 \\
+    0 & K_b+Y_2 & -Y_2 & -K_b & 0 & 0 & 0 \\
+    0 & Y_3 & 0 & -Y_3-Y_4-Y_5 & Y_5+\frac{1}{Z_C} & Y_7 & -Y_7-\frac{1}{Z_C} \\
+    0 & -K_b & 0 & Y_5+K_b & -Y_5-\frac{1}{Z_C} & 0 & \frac{1}{Z_C} \\
+    0 & 0 & 0 & 0 & 0 & -Y_6-Y_7 & Y_7\\
+    0 & 0 & 0 & 1 & 0 & K_dY_6 & -1\\
+  \end{bmatrix}
+  \begin{bmatrix}
+    \tilde{V}_1\\
+    \tilde{V}_2\\
+    \tilde{V}_3\\
+    \tilde{V}_5\\
+    \tilde{V}_6\\
+    \tilde{V}_7\\
+    \tilde{V}_8\\
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    \tilde{V}_{s}\\
+    0\\
+    0\\
+    0\\
+    0\\
+    0\\
+    0\\
+  \end{bmatrix}
+\end{equation}
+
+\begin{table}[ht!]
+  \centering
+    \input{../mat/tabPhasors.tex}
+  \caption{Phasors in each node, for $t\in [0,20]ms$ and $f=1kHz$.}
+  \label{tab:teo4}
+\end{table}
+\FloatBarrier
+
+
+
+
+
+\vspace{-12pt}
+\subsection{Step 5}
+The circuit was analyzed to determine the total solution, given by the sum of the natural and forced solutions, in node 6, $v_6(t)$, for the time interval $t\in [-5,20]ms$ and frequency $f=1kHz$.
+In Figure~\ref{fig:v6} the plot for $v_s(t)$ an $v_6(t)$ can be observed.
+
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=0.6\textwidth]{../mat/final.pdf}
+  \caption{Total solution, $v_{6}(t)$ and $v_{s}(t)$, for $t\in [-5,20]ms$ and $f=1kHz$.}
+  \label{fig:v6}
+\end{figure}
+\FloatBarrier
+
+
+
+\subsection{Step 6}
+The quantities $v_c(f)$ and $v_6(f)$ depend on the frequency. In order to study their behaviour for the frequency range 0.1 Hz to 1 MHz, the linear equation system~\ref{step4} can be manipulated to obtain the system~\ref{step6}.
+%Determine the frequency responses $v_c(f),\ v_6(f)$, for the frequency range 0.1 Hz to 1 MHz.
+
+\begin{equation}\label{step6}
+  \begin{bmatrix}
+    K_b+Y_2 & -Y_2 & -K_b & 0 & \rvline & 0 & 0 \\
+    Y_3-K_b & 0 & K_b-Y_3-Y_4 & -Y_6 & \rvline & 0 & 0 \\
+    K_b-Y_1-Y_3 & 0 & Y_3-K_b & 0 & \rvline & 0 & 0 \\
+    0 & 0 & 1 & K_dY_6-\frac{Y_6}{Y_7}-1 & \rvline & 0 & 0\\
+    \hline
+    K_b & 0 & -Y_5-K_b & 0 & \rvline & Y_5+\frac{1}{Z_C} & -\frac{1}{Z_C}\\
+    0 & 0 & 0 & -Y_6-Y_7 & \rvline & 0 & Y_7\\
+  \end{bmatrix}
+  \begin{bmatrix}
+    \tilde{V}_2\\
+    \tilde{V}_3\\
+    \tilde{V}_5\\
+    \tilde{V}_7\\
+    \tilde{V}_6\\
+    \tilde{V}_8\\
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    0\\
+    0\\
+    -Y_1 \tilde{V}_{s}\\
+    0\\
+    0\\
+    0\\
+  \end{bmatrix}
+\end{equation}
+
+Analyzing the system~\ref{step6}, the vector $\begin{bmatrix} \tilde{V}_2 & \tilde{V}_3 & \tilde{V}_5 & \tilde{V}_7 \end{bmatrix}^T$ can be determined independently of the frequency, given that all the elements of the upper left matrix are constants. From there, utilizing the equation~\ref{Zc} to get the impedance $Z_C$ for each frequency, the remaining values $\tilde{V}_6$ and $\tilde{V}_8$ can be obtained directly from the expressions given in that system, as shown in equation~\ref{eq:v6v8}, for each frequency. 
+
+\begin{equation}
+    \label{eq:v6v8}
+    \begin{cases}
+    \tilde{V}_8 = \frac{\left( Y_6 + Y_7\right)\tilde{V}_7}{Y_7} \\
+    \tilde{V}_6 = \frac{-K_b\tilde{V}_2 + \left( Y_5+K_b\right)\tilde{V}_5 + \frac{\tilde{V}_8}{Z_C}}{Y_5+\frac{1}{Z_C}}
+    \end{cases}
+\end{equation}
+
+After determining $\tilde{V}_6$ and $\tilde{V}_8$, $\tilde{V}_c$ is given by $\tilde{V}_c = \tilde{V}_6 - \tilde{V}_8$. The data obtained can be seen in Figures~\ref{fig:teo-db} and \ref{fig:teo-phase}, where the plot for the magnitude and phase, respectively, of $v_s(f)$, $v_c(f)$ an $v_6(f)$ can be observed.\\
+
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+    \includegraphics[width=0.9\linewidth]{../mat/dB.pdf}
+    \captionsetup{type=figure}
+\caption{Frequency logarithmic scale, magnitude in dB.}
+\label{fig:teo-db}
+\end{minipage}
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+    \includegraphics[width=0.9\linewidth]{../mat/phase.pdf}
+    \captionsetup{type=figure}
+  \caption{Frequency logarithmic scale, phase in degrees.}
+  \label{fig:teo-phase}
+\end{minipage}
