@@ -8,30 +8,29 @@
 
 
 
-.param xC=9u
-.param xR=1k
-.param xClp=0u
-.param xRlp=0k
+.param xC=1u
+.param xR=0.1k
+.param xClp=0.2u
+.param xRlp=0.01k
 
 * voltage source
 Vac T1 T0 dc 0 ac 1 sin(0 13.115 50)
 
 * bridge rectifier
-*Db1 T1 1 Default
-*Db2 T0 1 Default
-Db1 T1 vo Default
-Db2 T0 vo Default
-
+Db1 T1 1 Default
+Db2 T0 1 Default
 Db3 0 T0 Default
 Db4 0 T1 Default
 
-*Cc 1 0 xC
-Cc vo 0 xC
+Cc 1 2 xC
 
 * voltage regulator
-*Rr 1 vo xR
-Rr vo 0 xR
-*Dr vo 0 Nx
+Rr 2 0 xR
+Dr 1 0 Nx
+
+*low-pass
+Rlp 1 vo xRlp
+Clp vo 0 xClp
 
 .model Default D
 .model Nx D(N=25)
@@ -48,6 +47,8 @@ Rr vo 0 xR
 
 .measure tran cost param='(25+4)*0.1 + (xC+xClp)*10^6 + (xR+xRlp)*10^(-3)'
 .measure tran merit param='1 / (cost * (ripple + media0 + 10^(-6)))'
+
+.measure tran Media param='media'
 
 .control
 run
@@ -66,8 +67,8 @@ set color6=rgb:4/0/0
 
 let vo = v(vo)
 
-hardcopy dc.ps (vo-12) vo abs(v(T1,T0))
-echo dc_FIG
+hardcopy dc-22.ps (vo-12) vo abs(v(T1,T0))
+echo dc-22_FIG
 
 
 quit

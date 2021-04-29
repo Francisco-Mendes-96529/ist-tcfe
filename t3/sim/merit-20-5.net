@@ -8,10 +8,9 @@
 
 
 
-.param xC=9u
-.param xR=1k
-.param xClp=0u
-.param xRlp=0k
+.param xC=1u
+.param xR=0.1k
+*.param xD=17
 
 * voltage source
 Vac T1 T0 dc 0 ac 1 sin(0 13.115 50)
@@ -26,12 +25,12 @@ Db3 0 T0 Default
 Db4 0 T1 Default
 
 *Cc 1 0 xC
-Cc vo 0 xC
+Cc vo 2 xC
 
 * voltage regulator
 *Rr 1 vo xR
-Rr vo 0 xR
-*Dr vo 0 Nx
+Rr 2 0 xR
+Dr vo 0 Nx
 
 .model Default D
 .model Nx D(N=25)
@@ -46,7 +45,7 @@ Rr vo 0 xR
 .measure tran minvo MIN v(vo) from=.2 to=.4
 .measure tran ripple param='maxvo - minvo'
 
-.measure tran cost param='(25+4)*0.1 + (xC+xClp)*10^6 + (xR+xRlp)*10^(-3)'
+.measure tran cost param='(25+4)*0.1 + (xC)*10^6 + (xR)*10^(-3)'
 .measure tran merit param='1 / (cost * (ripple + media0 + 10^(-6)))'
 
 .control
@@ -66,8 +65,8 @@ set color6=rgb:4/0/0
 
 let vo = v(vo)
 
-hardcopy dc.ps (vo-12) vo abs(v(T1,T0))
-echo dc_FIG
+hardcopy dc-20-5.ps (vo-12) vo abs(v(T1,T0))
+echo dc-20-5_FIG
 
 
 quit
