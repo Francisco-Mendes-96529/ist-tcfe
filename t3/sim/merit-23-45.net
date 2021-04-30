@@ -7,7 +7,6 @@
 .options savecurrents
 
 
-
 * voltage source
 Vac Vin 0 dc 0 ac 1 sin(0 230 50)
 
@@ -24,12 +23,9 @@ Db4 0 va Default
 Cc ve 0 1u
 
 * voltage regulator
-Rr ve vreg 0.1k
-Dr vreg 0 Nx
+Rr ve vo 0.1k
+Dr vo 0 Nx
 
-*low-pass
-Rlp vreg vo 0.01k
-Clp vo 0 0.2u
 
 .model Default D
 .model Nx D(N=25)
@@ -53,40 +49,33 @@ set color5=rgb:3/8/0
 set color6=rgb:4/0/0
 
 
+let vo = v(vo)
 let xC = 1
 let xR = 0.1
-let xClp = 0.2
-let xRlp = 0.01
 
 let mediave = mean(ve)
 let rippleve = maximum(ve)-minimum(ve)
 
-let mediavreg = mean(vreg)
-let ripplevreg = maximum(vreg)-minimum(vreg)
-
 let mediavo = mean(vo)
 let ripplevo = maximum(vo)-minimum(vo)
 
-
 let media0 = abs(mediavo-12)
-let cost = '(25+4)*0.1 + xC+xClp + xR+xRlp'
+let cost = '(25+4)*0.1 + xC + xR'
 let merit = '1 / (cost * (ripplevo + media0 + 10^(-6)))'
 
 print media0
 
-echo  "t3-lp_TAB"
+echo  "t3_TAB"
 print mediave
 print rippleve
-print mediavreg
-print ripplevreg
 print mediavo
 print ripplevo
 print merit
-echo  "t3-lp_END"
+echo  "t3_END"
 
 
-hardcopy dc-24-5-lp.ps ve vreg vo vo-12
-echo dc-24-5-lp_FIG
+hardcopy dc-23-45.ps ve vo vo-12
+echo dc-23-45_FIG
 
 
 quit

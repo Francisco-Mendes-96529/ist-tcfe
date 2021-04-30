@@ -1,0 +1,93 @@
+*
+* Low-Pass Filter + Limiter
+*
+
+* forces current values to be saved
+.options savecurrents
+
+******************************************
+* input voltage source
+*vS 1 0 0 sin(0 5 100)
+*vS 1 0 0 sin(0 5 400)
+
+Vs A C 0 sin(0 70 50)
+D1 A 1 Default
+D2 C 1 Default
+D3 0 A Default
+D4 0 C Default
+
+* passa-alto ordem 1 a entrada 
+Ci 2 0 1.281u
+Ri 1 2 1.281k
+
+
+* positive limiter
+Dp1 2 3 Default
+Dp2 3 4 Default 
+Dp3 4 5 Default
+Dp4 5 6 Default
+Dp5 6 7 Default
+Dp6 7 8 Default
+Dp7 8 9 Default
+Dp8 9 10 Default
+Dp9 10 11 Default
+Dp10 11 12 Default
+Dp11 12 13 Default
+Dp12 13 14 Default
+Dp13 14 15 Default
+Dp14 15 16 Default
+Dp15 16 17 Default
+Dp16 17 18 Default
+Dp17 18 0 Default
+*Dp18 19 20 Default
+*Dp19 20 21 Default
+*Dp20 21 22 Default
+*Dp21 22 23 Default
+*Dp22 23 24 Default
+*Dp23 24 25 Default
+*Dp24 25 26 Default
+*Dp25 26 27 Default
+*Dp26 27 28 Default
+*Dp27 28 29 Default
+*Dp28 29 0 Default
+
+
+* negative limiter
+*Dn1 0 5 Default
+*Dn2 5 6 Default
+*Dn3 6 2 Default
+
+*Envelope
+De 2 F Default
+Re F 0 15k
+Ce F 0 15u
+
+*low-pass
+Rf F G 10k
+Cf G 0 10u
+
+.model Default D
+.op
+.end
+
+.control
+
+******************************************
+* analise no tempo
+tran 1e-5 3 2
+
+plot v(g)
+
+meas tran vavg AVG v(g) from=2 to=3
+meas tran vmax MAX v(g) from=2 to=3
+meas tran vmin MIN v(g) from=2 to=3
+
+print vavg-12
+print vmax-vmin
+print 1/(((vavg-12)+(vmax-vmin)+1u)*(42))
+
+******************************************
+hardcopy vospice100.ps v(1) v(2)
+* hardcopy vospice400.ps v(1) v(2)
+
+.endc
