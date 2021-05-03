@@ -1,8 +1,5 @@
-octave.log: t2.m ../sim/incl ../data.txt
+octave.log: t3.m
 	octave $< > $@
-
-../sim/incl:
-	@mkdir ../sim/incl
 
 clean:
 	@rm -f octave.log octave-workspace *.eps *~ *.tex *.log *.aux *.pdf
