@@ -23,7 +23,7 @@ vD = 0.48;
   tOFF = 1/w * (acos(vD*27 / (A*sqrt(k*k+1))) + atan(1/k));
 tOFF -= T/2;
 
-vOnexp = (A*abs(sin(w*tOFF))-vD*2) * exp(-(t-tOFF)/rc);
+vOnexp = (A-vD*2) * exp(-(t-tOFF)/rc);
 
 hf = figure ();
 for i=1:length(t)
@@ -43,7 +43,7 @@ for i=1:length(t)
     vO(i) = vOnexp(i);
   else 
     tOFF += T/2;
-    vOnexp = (A*abs(sin(w*tOFF)) - 2*vD) * exp(-(t-tOFF)/rc);
+    vOnexp = (A - 2*vD) * exp(-(t-tOFF)/rc);
     vO(i) = vOhr(i);
   endif
 endfor
