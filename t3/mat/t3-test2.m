@@ -165,5 +165,16 @@ meanVo = mean(vOslice);
 printf("rippleVe = %.6e\nmeanVe = %.6e\nrippleVo = %.6e\nmeanVo = %.6e\n", rippleVe,meanVe, rippleVo,meanVo);
 
 
+ff = fopen("tabvout.tex","w");
+fprintf(ff,"\\begin{tabular}{cc}\n");
+fprintf(ff,"\\toprule\n");
+fprintf(ff," & Voltage (V)\\\\ \\midrule\n");
+fprintf(ff,"$Ripple_{vO}$ & %.5e \\\\\n", rippleVo);
+fprintf(ff,"$Average_{vO}$ & %.5e \\\\ \\bottomrule\n", meanVo);
+fprintf(ff,"\\end{tabular}");
+fclose(ff);
+
+
+
 %system("epstopdf phase.eps");
 %disp("\nfigure saved");

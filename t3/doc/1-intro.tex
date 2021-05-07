@@ -1,0 +1,48 @@
+\section{Introduction}
+\label{sec:introduction}
+
+% state the learning objective 
+The purpose of this laboratory assignment is to make an AC/DC converter, from AC(230V / 50Hz) to DC(12V), with the goal to get the highest merit, M, possible.
+$$ M = \frac{1}{cost*(ripple(v_O)+average(v_O-12)+10^{-6})}$$
+
+After some simulations with different circuits, we found the circuit shown in Figure~\ref{fig:t3-transformer} yielded the best merit.
+
+The circuit above is equivalent to the circuit in Figure~\ref{fig:t3-depSources}.
+
+In Section~\ref{sec:simulation}, it is explained the process done and the circuit is analyzed by
+simulation using the software Ngspice. 
+
+
+In Section~\ref{sec:analysis}, an approximated theoretical model, using the software GNU Octave, of the circuit is presented. 
+
+In Section~\ref{sec:comparison}, a comparison is done between the results obtained by both analyses, theoretical and simulation.
+
+In Section~\ref{sec:extra},  a circuit with a low-pass filter, as shown in Figure~\ref{fig:t3-lp} is analyzed by
+simulation using the software Ngspice. 
+
+The conclusions of this study are outlined in
+Section~\ref{sec:conclusion}.
+
+
+\begin{figure}[ht!]
+\centering
+    \includegraphics[width=0.8\linewidth]{t3-transformer.pdf}
+\caption{Circuit T3, with transformer.}
+\label{fig:t3-transformer}
+\end{figure}
+
+\begin{figure}[ht!]
+\centering
+    \includegraphics[width=0.8\linewidth]{t3-depSources.pdf}
+\caption{Circuit T3, with transformer equivalent.}
+\label{fig:t3-depSources}
+\end{figure}
+
+\begin{figure}[ht!]
+\centering
+    \includegraphics[width=0.8\linewidth]{t3-lp.pdf}
+\caption{Circuit T3, with low-pass filter.}
+\label{fig:t3-lp}
+\end{figure}
+
+\FloatBarrier

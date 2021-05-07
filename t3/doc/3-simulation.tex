@@ -1,0 +1,46 @@
+%\clearpage
+\section{Simulation Analysis}
+\label{sec:simulation}
+
+\subsection{Process}
+
+For an AC/DC converter is needed an envelope detector and a voltage regulator in parallel.
+
+The envelope detector is usually a full-wave bridge rectifier in parallel
+with a capacitor and a resistor.
+
+The voltage regulator is a resistor in series with a set of diodes.
+
+After analyzing these two sub-circuits, we concluded that a resistor in parallel
+with the capacitor was not needed, since we had a resistor in the voltage
+regulator, and that was the only resistor necessary.
+
+Sequentially, we tested different values in order to obtain the best merit possible.
+
+
+\subsection{Results}
+
+The plots obtained are shown in Figure~\ref{fig:dc-23-45}. The ripple and average at the output
+of the envelope detector, ve, and voltage regulator, vo, and merit are presented in Table~\ref{tab:t3}.\\
+
+
+\begin{minipage}[b]{0.46\textwidth}
+\centering
+    \centering
+    \includegraphics[width=0.9\textwidth, trim={1.8cm 2cm 0 8.1cm}]{../sim/dc-23-45.pdf}
+    \captionsetup{type=figure}
+    \caption{ve, vo, (vo-12)}
+    \label{fig:dc-23-45}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.46\textwidth}
+\centering
+   \begin{tabular}{|l|r|}
+    \hline    
+    {\bf Name} & {\bf Value [V]} \\ \hline
+    \input{../sim/t3_tab}
+   \end{tabular}
+    \captionsetup{type=table}   
+  \caption{Results obtained.}
+  \label{tab:t3}
+\end{minipage}
