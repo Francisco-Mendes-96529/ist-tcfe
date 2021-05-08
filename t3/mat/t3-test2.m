@@ -84,7 +84,7 @@ function [vcnext,vDnext,vPnext] = ftotal(vcn,vD,vP,vS,R,C)
 vT = 25.9e-3;
 Is = 1e-14;
 
-vcnext = -Is*(exp(vP/vT)-exp(vD/vT))/C*h+vcn;
+vcnext = Is*(exp(vP/vT)-exp(vD/vT))/C*h+vcn;
 vDnext = solve_vDc (vcnext,R,vD);
 vPnext = (vS - 25*vDnext + R*Is*(exp(vDnext/vT)-1))/2;
 
@@ -95,29 +95,31 @@ endfunction
 A=13.115
 R=100
 C=1e-6
-t=linspace(0, 0.4, 2000);
+t=linspace(0, 0.6, 3000);
 f=50;
 T=1/f;
 w=2*pi*f;
 vS = A * sin(w*t);
 vCr = zeros(1, length(t));
 vC = zeros(1, length(t));
+vO = zeros(1, length(t));
 vT = 25.9e-3;
 Is = 1e-14;
 
-%% dvc/dt = 0
-  vD = solve_vD  (A, R, 0.6)
+%% dvc/dt = 0, t = T/4
+  vD = solve_vD  (vS(10), R, 0.6)
 vP = vD
 vcn = 25*vD + R*Is*(exp(vD/vT)-1)
   %  [vcnext,vDnext,vPnext] = ftotal(vcn,vD,vP,A,R,C)
 
-for i=25:length(t)
+for i=10:length(t)
  % if (abs(vS(i)) > 2*vP)
     [vcnext,vDnext,vPnext] = ftotal(vcn,vD,vP,abs(vS(i)),R,C);
-    vCr(i) = vcnext;
 vcn = vcnext;
 vD = vDnext;
 vP =vPnext;
+    vCr(i) = vcn;
+    vO(i) = vD*25;
 %  else
  %   vCr(i) = 0;
 %  endif
@@ -126,11 +128,18 @@ endfor
 
 
 hf = figure ();
-tslice = t(1001:end);
-vCrslice = vCr(1001:end);
-%plot(tslice*1000, vCrslice)
-plot(t*1000, vCr)
+tslice = t(1001:2000);
+%tslice = t(1001:end);
+
+vCrslice = vCr(2001:end);
+vOslice = vO(2001:end);
+
+plot(tslice*1000, vCrslice,'-',tslice*1000, vOslice,'-')
+%plot(t(25:end)*1000, vCr(25:end),'-',t(25:end)*1000, vO(25:end),'-')
 hold
+
+vO0 = vOslice-12;
+plot(tslice*1000, vO0)
 
 #{
 tOFF = 10*T - T/4
@@ -169,29 +178,39 @@ plot(tslice*1000, vCslice,'-',tslice*1000, vOslice,'-');
   #}
 title("Output voltage (t)")
 xlabel ("t[ms]")
-legend("rectified","envelope","vO")%"rectified",
-print (hf,"vT3.eps", "-depsc");
+legend("envelope","vO","(vO-12)")%"rectified",
+print (hf,"test2.eps", "-depsc");
 close(hf);
 
-#{
+
 printf("\n\nVALORES:\n");
+maxVe = max(vCrslice);
+minVe = min(vCrslice);
+rippleVe = maxVe-minVe;
+meanVe = mean(vCrslice);
+#{
 maxVe = max(vCslice);
 minVe = min(vCslice);
 rippleVe = maxVe-minVe;
 meanVe = mean(vCslice);
+#}
 maxVo = max(vOslice);
 minVo = min(vOslice);
 rippleVo = maxVo-minVo;
 meanVo = mean(vOslice);
-printf("rippleVe = %.6e\nmeanVe = %.6e\nrippleVo = %.6e\nmeanVo = %.6e\n", rippleVe,meanVe, rippleVo,meanVo);
+desvioPerc = abs(meanVo-12)/12*100;
+ripplePerc = rippleVo/meanVo*100;
+printf("rippleVe = %.6e\nmeanVe = %.6e\nrippleVo = %.6e\nmeanVo = %.6e\ndeviationPerc = %.6e\nripplePerc = %.6e\n", rippleVe,meanVe, rippleVo,meanVo, desvioPerc,ripplePerc);
 
-
+#{
 ff = fopen("tabvout.tex","w");
 fprintf(ff,"\\begin{tabular}{cc}\n");
 fprintf(ff,"\\toprule\n");
 fprintf(ff," & Voltage (V)\\\\ \\midrule\n");
 fprintf(ff,"$Ripple_{vO}$ & %.5e \\\\\n", rippleVo);
-fprintf(ff,"$Average_{vO}$ & %.5e \\\\ \\bottomrule\n", meanVo);
+fprintf(ff,"$Average\\ (v_O)$ & %.5e V\\\\\n", meanVo);
+fprintf(ff,"$Deviation$ & %.5e \\%%\\\\\n", desvioPerc);
+fprintf(ff,"$Ripple$ & %.5e \\%%\\\\ \\bottomrule\n", ripplePerc);
 fprintf(ff,"\\end{tabular}");
 fclose(ff);
 

@@ -16,7 +16,7 @@ endfunction
 function fd = fd(vD,R)
 Is = 1e-14;
 VT=25.9e-3;
-fd = 27 + R*Is/VT * (exp(vD/VT)-1);
+fd = 27 + R*Is/VT * exp(vD/VT);
 endfunction
 
 function vD_root = solve_vD (vS, R)
@@ -41,7 +41,7 @@ endfunction
 function fd = fcd(vD,R)
 Is = 1e-14;
 VT=25.9e-3;
-fd = 25 + R*Is/VT * (exp(vD/VT)-1);
+fd = 25 + R*Is/VT * exp(vD/VT);
 endfunction
 
 function vD_root = solve_vDc (vC, R)
@@ -170,11 +170,11 @@ printf("rippleVe = %.6e\nmeanVe = %.6e\nrippleVo = %.6e\nmeanVo = %.6e\n", rippl
 ff = fopen("tabvout.tex","w");
 fprintf(ff,"\\begin{tabular}{cc}\n");
 fprintf(ff,"\\toprule\n");
-fprintf(ff," & Voltage (V)\\\\ \\midrule\n");
-fprintf(ff,"$Ripple_{vO}$ & %.5e \\\\\n", rippleVo);
-fprintf(ff,"$Average_{vO}$ & %.5e \\\\\n", meanVo);
-fprintf(ff,"$Desvio\\ (\\%%)$ & %.5e \\\\\n", desvioPerc);
-fprintf(ff,"$Ripple\\ (\\%%)$ & %.5e \\\\ \\bottomrule\n", ripplePerc);
+fprintf(ff,"Name & Value\\\\ \\midrule\n");
+fprintf(ff,"$Ripple\\ (v_O)$ & %.5e V\\\\\n", rippleVo);
+fprintf(ff,"$Average\\ (v_O)$ & %.5e V\\\\\n", meanVo);
+fprintf(ff,"$Deviation$ & %.5e \\%%\\\\\n", desvioPerc);
+fprintf(ff,"$Ripple$ & %.5e \\%%\\\\ \\bottomrule\n", ripplePerc);
 fprintf(ff,"\\end{tabular}");
 fclose(ff);
 
