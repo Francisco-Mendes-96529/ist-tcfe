@@ -53,23 +53,28 @@ let vo = v(vo)
 let xC = 1
 let xR = 0.1
 
-let mediave = mean(ve)
+let averageve = mean(ve)
 let rippleve = maximum(ve)-minimum(ve)
 
-let mediavo = mean(vo)
+let averagevo = mean(vo)
 let ripplevo = maximum(vo)-minimum(vo)
 
-let media0 = abs(mediavo-12)
+let media0 = abs(averagevo-12)
 let cost = '(25+4)*0.1 + xC + xR'
 let merit = '1 / (cost * (ripplevo + media0 + 10^(-6)))'
+
+let deviationPerc = media0/12*100
+let ripplePerc = ripplevo/averagevo*100
 
 print media0
 
 echo  "t3_TAB"
-print mediave
+print averageve
 print rippleve
-print mediavo
+print averagevo
 print ripplevo
+print deviationPerc
+print ripplePerc
 print merit
 echo  "t3_END"
 

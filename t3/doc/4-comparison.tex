@@ -1,68 +1,12 @@
-
-\clearpage
 \section{Comparison}
 \label{sec:comparison}
 
-\subsection{Step 1}
+Comparing the results achieved in the simulation, Table~\ref{tab:t3}, and in the theoretical
+analysis, Table~\ref{tab:vout}, it is possible to see a small difference.
 
-We can now compare the results obtained for step 1 with both theoretical analysis and simulation analysis presented previously in Tables~\ref{tab:teo1} and \ref{tab:op1}.\\
+This discrepancy may have resulted from the assumption made in Step~\ref{subsec:step1},
+since $Ripple\ (\%)$ theoretical $\approx rippleperc$ simulated, and
+$Deviation\ (\%)$ theoretical $\not\approx rippleperc$ simulated. 
+However this assumption is needed, since without it, the analysis would become very difficult.
 
-\begin{minipage}[b]{0.48\textwidth}
-\centering
-    \input{../mat/nodalAn-tneg.tex}
-    \captionsetup{type=table}
-\caption{Octave values for $t<0$}
-\label{tab:Octave1}
-\end{minipage}
-\begin{minipage}[b]{0.48\textwidth}
-\centering
- \begin{tabular}{|l|r|}
-    \hline
-     {\bf Name} & {\bf Value [A or V]} \\ \hline
-   \input{../sim/op1_tab}
-    \end{tabular}
-    \captionsetup{type=table}
-  \caption{Ngspice values for $t<0$}
-  \label{tab:ngspice1}
-\end{minipage}
-
-
-\clearpage
-\subsection{Step 2}
-We can now compare the results obtained for step 2 with both theoretical analysis and simulation analysis presented previously in Tables~\ref{tab:teo2} and \ref{tab:op2}.\\
-
-\begin{minipage}[b]{0.48\textwidth}
-\centering
-    \input{../mat/nodalAn-t0.tex}
-    \captionsetup{type=table}
-\caption{Octave values, for $t=0$}
-\label{tab:Octave2}
-\end{minipage}
-\begin{minipage}[b]{0.48\textwidth}
-\centering
- \begin{tabular}{|l|r|}
-    \hline
-     {\bf Name} & {\bf Value [A or V]} \\ \hline
-    \input{../sim/op2_tab}
-  \end{tabular}
-    \captionsetup{type=table}
-  \caption{Ngspice values, for $t=0$}
-  \label{tab:ngspice2}
-\end{minipage}
-
-We can see that the theoretical and simulation results for both steps are  reasonably similar given what was stated in Section~\ref{sec:simulation}, which was expected.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Additionally, there would be always some very small differences due to the non-linearity of the equations.

@@ -44,9 +44,9 @@ VT=25.9e-3;
 fd = 25 + R*Is/VT * exp(vD/VT);
 endfunction
 
-function vD_root = solve_vDc (vC, R)
+function vD_root = solve_vDc (vC,R,x)
   delta = 1e-6;
-  x_next = 0.65;
+  x_next = x;
 
   do 
     x=x_next;
@@ -77,6 +77,16 @@ vc_next = vcd * h + vc;
 vc_f(i) = vc_next;
 
 endfor
+endfunction
+
+function [vcnext,vDnext,vPnext] = ftotal(vcn,vD,vP,vS,R,C)
+  h = 0.2/1000;
+vT = 25.9e-3;
+Is = 1e-14;
+
+vcnext = -Is*(exp(vP/vT)-exp(vD/vT))/C*h+vcn;
+vDnext = solve_vDc (vcnext,R,vD);
+vPnext = (vS - 25*vDnext + R*Is*(exp(vDnext/vT)-1))/2;
 
 endfunction
 
@@ -95,23 +105,34 @@ vC = zeros(1, length(t));
 vT = 25.9e-3;
 Is = 1e-14;
 
+%% dvc/dt = 0
+  vD = solve_vD  (A, R, 0.6)
+vP = vD
+vcn = 25*vD + R*Is*(exp(vD/vT)-1)
+  %  [vcnext,vDnext,vPnext] = ftotal(vcn,vD,vP,A,R,C)
 
-for i=1:length(t)
-	vD = solve_vD  (abs(vS(i)), R);
-  if (abs(vS(i)) > 2*vD)
-    vCr(i) = abs(vS(i))-2*vD;
-  else
-    vCr(i) = 0;
-  endif
+for i=25:length(t)
+ % if (abs(vS(i)) > 2*vP)
+    [vcnext,vDnext,vPnext] = ftotal(vcn,vD,vP,abs(vS(i)),R,C);
+    vCr(i) = vcnext;
+vcn = vcnext;
+vD = vDnext;
+vP =vPnext;
+%  else
+ %   vCr(i) = 0;
+%  endif
 endfor
+
+
 
 hf = figure ();
 tslice = t(1001:end);
 vCrslice = vCr(1001:end);
-plot(tslice*1000, vCrslice)
+%plot(tslice*1000, vCrslice)
+plot(t*1000, vCr)
 hold
 
-
+#{
 tOFF = 10*T - T/4
 
 vD = solve_vD(A, R)
@@ -145,14 +166,14 @@ endfor
 %plot(tslice*1000, vOslice)
 
 plot(tslice*1000, vCslice,'-',tslice*1000, vOslice,'-');
-
+  #}
 title("Output voltage (t)")
 xlabel ("t[ms]")
 legend("rectified","envelope","vO")%"rectified",
 print (hf,"vT3.eps", "-depsc");
 close(hf);
 
-
+#{
 printf("\n\nVALORES:\n");
 maxVe = max(vCslice);
 minVe = min(vCslice);
@@ -174,7 +195,7 @@ fprintf(ff,"$Average_{vO}$ & %.5e \\\\ \\bottomrule\n", meanVo);
 fprintf(ff,"\\end{tabular}");
 fclose(ff);
 
-
+ #}
 
 %system("epstopdf phase.eps");
 %disp("\nfigure saved");
