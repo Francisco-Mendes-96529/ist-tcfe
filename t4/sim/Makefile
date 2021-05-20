@@ -1,4 +1,4 @@
-all: log-t4
+all: log-t4 log-t4-outimp
 
 log-%: %.log
 	$(eval NGSFIGS=$(shell grep _FIG $< | sed 's/_FIG//g' | sed ':a;N;$!ba;s/\n/ /g'))

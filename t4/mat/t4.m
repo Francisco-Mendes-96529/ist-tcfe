@@ -1,6 +1,6 @@
 %gain stage
 
-VT=25e-3
+VT=25.9e-3
 BFN=178.7
 VAFN=69.7
 RE1=100

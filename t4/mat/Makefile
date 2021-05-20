@@ -1,6 +1,5 @@
-#LODFIGS = $(patsubst %.eps,%.pdf,$(wildcard *.eps))
 
-octave.log: t3.m #$(LODFIGS)
+octave.log: t4.m
 	octave $< > $@
 	$(LODFIGS)
 
