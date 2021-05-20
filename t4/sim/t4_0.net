@@ -39,32 +39,68 @@ RL out 0 8
 
 .control
 
+*makes plots in color
+set hcopypscolor=0
+set color0=white
+set color1=black
+set color2=red
+set color3=blue
+set color4=violet
+set color5=rgb:3/8/0
+set color6=rgb:4/0/0
+
 
 * time analysis
 tran 1e-5 1e-2
-plot v(coll)
-hardcopy vo1.ps vdb(coll)
+*plot v(coll)
+hardcopy vo1.ps v(coll)
 
 
 * frequency analysis
 ac dec 10 10 100MEG
-plot vdb(coll)
-plot vp(coll)
-hardcopy vo1f.ps vdb(coll)
+*plot vdb(coll)
+*plot vp(coll)
+hardcopy vo1f.ps vdb(coll) vp(coll)*180/pi
 
 
 
-plot vdb(out)
-plot vp(out)
-hardcopy vo2f.ps vdb(coll)
+*plot vdb(out)
+*plot vp(out)
+hardcopy vo2f.ps vdb(out) vp(out)*180/pi
 
 *input impedance in kohm
 *print all
 
-plot abs(v(in2)[40]/vin#branch[40]/(-1000))
+*plot abs(v(in2)[40]/vin#branch[40]/(-1000))
+echo "*******************"
+echo "* input impedance *"
+echo "*******************"
 print v(in2)[40]/vin#branch[40]/(-1000)
+
+
+echo " "
+echo "****************"
+echo "* merit values *"
+echo "****************"
+
+meas ac voltGain MAX vdb(out)
+let voltG3 = voltGain-3
+print voltG3
+
+meas ac lowerCOf WHEN vdb(out)=voltG3
+meas ac upperCOf WHEN vdb(out)=voltG3 CROSS=LAST
+
+let bandwidth = upperCOf-lowerCOf
+print bandwidth
+
+let cost = 0.1*2 + (0.1+80+20+1+0.1+0.1+0.008) + (1k+1k+1)
+print cost
+
+let merit = voltGain*bandwidth/cost/lowerCOf
+print merit
 
 *need a different setup to measure output impedance
 
+quit
 .endc 
 

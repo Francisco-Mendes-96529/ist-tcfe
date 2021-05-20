@@ -1,0 +1,75 @@
+\section{Theoretical Analysis}
+\label{sec:analysis}
+
+In this section, the circuit shown in Figure~\ref{fig:t3-depSources} is analyzed
+theoretically, according to the following steps.
+
+With $i_P$ ($v_P$), the current (voltage) through the diodes of the bridge rectifier.
+In order to calculate $v_{D}$ and $v_{D\ next}$, the Newton-Raphson method was used.
+
+
+\subsection{Step 1}\label{subsec:step1}
+The circuit was analyzed considering the voltage across C as constant,
+$$\dot{v}_C = 0 \Rightarrow i_P=i_D \Rightarrow v_P=v_D$$, for $t = T/4 \,s$
+resulting in the following equations:
+
+\begin{equation}\label{step1}
+  \begin{split}
+    v_2(T/4) &= 2v_P + v_R + 25v_D\\
+    &= 27v_D + RI_s(e^{\frac{v_D}{V_T}}-1)\\
+  \end{split}
+\end{equation}
+\vspace{-15pt}
+\begin{align}
+  f(v_D)&=27v_D + RI_s(e^{\frac{v_D}{V_T}}-1) - v_2(T/4)\\
+  f'(v_D)&=27 + \frac{RI_s}{V_T}e^{\frac{v_D}{V_T}}\\
+  v_C&=RI_S(e^{\frac{v_D}{V_T}}-1) + 25v_D
+\end{align}
+
+
+
+
+\subsection{Step 2}\label{subsec:step2}
+The circuit was analyzed considering that the voltage across C is not constant and
+therefore the capacitor is discharging, resulting in the following equations,
+for $t \geq T/4 \,s$:
+
+\begin{align}\label{step2}
+  i_C &= C\dot{v}_C\\
+  i_P &= i_C + i_D
+\end{align}
+\vspace{-15pt}
+\begin{equation}
+\begin{split}
+  \dot{v}_C &= \frac{I_s(e^{\frac{v_P}{V_T}}-e^{\frac{v_D}{V_T}})}{C}\\
+  \Leftrightarrow v_{C\ next} &= \frac{I_s(e^{\frac{v_P}{V_T}}-e^{\frac{v_D}{V_T}})}{C}h + v_C
+\end{split}
+\end{equation}
+\vspace{-15pt}
+\begin{align}
+  f(v_{D\ next})&=25v_D + RI_s(e^{\frac{v_D}{V_T}}-1) - v_{C\ next}\\
+  f'(v_{D\ next})&=25 + \frac{RI_s}{V_T}e^{\frac{v_D}{V_T}}\\
+  v_{P\ next} &= \frac{abs(v_2) - 25v_{D\ next} + RI_s(e^{\frac{v_D}{V_T}}-1)}{2}
+\end{align}
+
+
+
+\subsection{Results}
+The results obtained are shown in Table~\ref{tab:vout}, and the plots in
+Figure~\ref{fig:vT3}.\\
+
+\begin{minipage}[b]{0.48\textwidth}
+  \centering
+  \input{../mat/tabvout}
+  \captionsetup{type=table}
+  \caption{Results obtained.}
+  \label{tab:vout}
+\end{minipage}
+\hfil
+\begin{minipage}[b]{0.48\textwidth}
+  \centering
+  \includegraphics[width=0.9\textwidth]{vT3.pdf}
+  \captionsetup{type=figure}
+  \caption{Plots obtained.}
+  \label{fig:vT3}
+\end{minipage}
