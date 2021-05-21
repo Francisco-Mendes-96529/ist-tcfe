@@ -1,5 +1,8 @@
+all: t4.log t4-plotgain.log
 
-octave.log: t4.m
+.SECONDARY:
+
+%.log: %.m
 	octave $< > $@
 	$(LODFIGS)
 

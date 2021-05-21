@@ -9,7 +9,7 @@ Vin in 0 0 ac 1.0 sin(0 10m 1k)
 Rin in in2 100
 
 * input coupling capacitor
-Ci in2 base 0.01m
+Ci in2 base 0.1m
 
 * bias circuit
 R1 vcc base 80k
@@ -21,7 +21,7 @@ Rc vcc coll 1k
 Re emit 0 100
 
 * bypass capacitor
-Cb emit 0 0.01m
+Cb emit 0 1m
 
 
 * output stage
@@ -29,7 +29,7 @@ Q2 0 coll emit2 BC557A
 Rout emit2 vcc 100
 
 * output coupling capacitor
-Co emit2 out 1u
+Co emit2 out 1m
 
 * load
 RL out 0 8
@@ -68,6 +68,9 @@ hardcopy vo1f.ps vdb(coll) vp(coll)*180/pi
 *plot vp(out)
 hardcopy vo2f.ps vdb(out) vp(out)*180/pi
 
+hardcopy votf.ps vdb(out) vdb(coll)
+
+
 *input impedance in kohm
 *print all
 
@@ -76,6 +79,7 @@ echo "*******************"
 echo "* input impedance *"
 echo "*******************"
 print v(in2)[40]/vin#branch[40]/(-1000)
+*print v(in2)/vin#branch/(-1000)
 
 
 echo " "
@@ -93,7 +97,7 @@ meas ac upperCOf WHEN vdb(out)=voltG3 CROSS=LAST
 let bandwidth = upperCOf-lowerCOf
 print bandwidth
 
-let cost = 0.1*2 + (0.1+80+20+1+0.1+0.1+0.008) + (0.01k+0.01k+1)
+let cost = 0.1*2 + (0.1+80+20+1+0.1+0.1+0.008) + (0.1k+1k+1k)
 print cost
 
 let merit = voltGain*bandwidth/cost/lowerCOf
