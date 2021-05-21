@@ -59,4 +59,4 @@ vin0 = 1e-2
   Rb = 1./( 1./(rpi1 .+ 1./(1./RE1.+1./Zcb)) .+ 1./RB1 .+ 1./RB2);
 vi1 = Rb./(Rin.+Zcb.+Rb) .* vin0;
 
-v1 = (gm1 .+ 1./rpi1 .+ Rc
+v1 = (gm1 .+ 1./rpi1 .+ RC1.*gm1./(ro1.-RC1)).*vi1./(1./RE1.+1./Zcb.+gm1.+1./ro1.+1./rpi1.+RC1.*(1./ro1.+gm1)./(ro1.-RC1))
