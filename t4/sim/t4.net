@@ -75,10 +75,10 @@ hardcopy votf.ps vdb(out) vdb(coll)
 *print all
 
 *plot abs(v(in2)[40]/vin#branch[40]/(-1000))
-echo "*******************"
-echo "* input impedance *"
-echo "*******************"
-print v(in2)[40]/vin#branch[40]/(-1000)
+echo "***********************"
+echo "* input impedance ohm *"
+echo "***********************"
+print v(in2)[40]/vin#branch[40]/(-1)
 *print v(in2)/vin#branch/(-1000)
 
 

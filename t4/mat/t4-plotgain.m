@@ -36,7 +36,9 @@ VO2 = VCC - RE2*IE2
 
 gm2 = IC2/VT
 go2 = IC2/VAFP
+ro2 = VAFP/IC2
 gpi2 = gm2/BFP
+rpi2 = BFP/gm2
 ge2 = 1/RE2
 
 
@@ -46,17 +48,66 @@ Rin = 100
 Cin = 0.1e-3
 Cb = 1e-3
 Co = 1e-3
+RL = 8
 
 f = logspace(1, 8, 71);
 w = 2*pi*f;
 
-Zcin = i*w*Cin;
-Zcb = i*w*Cb;
-Zco = i*w*Co;
+Zcin = 1./(i.*w.*Cin);
+Zcb = 1./(i.*w.*Cb);
+Zco = 1./(i.*w.*Co);
 
 vin0 = 1e-2
 
+
+  %%%%%%% gain stage
+  
   Rb = 1./( 1./(rpi1 .+ 1./(1./RE1.+1./Zcb)) .+ 1./RB1 .+ 1./RB2);
 vi1 = Rb./(Rin.+Zcb.+Rb) .* vin0;
 
-v1 = (gm1 .+ 1./rpi1 .+ RC1.*gm1./(ro1.-RC1)).*vi1./(1./RE1.+1./Zcb.+gm1.+1./ro1.+1./rpi1.+RC1.*(1./ro1.+gm1)./(ro1.-RC1))
+v1 = (gm1 .+ 1./rpi1 .+ RC1.*gm1./(ro1.-RC1)).*vi1./(1./RE1.+1./Zcb.+gm1.+1./ro1.+1./rpi1.+RC1.*(1./ro1.+gm1)./(ro1.-RC1));
+
+vo1 = RC1 .* (gm1 .* (vi1 .- v1) .- v1./ro1) ./ (1 .- RC1./ro1);
+
+  %%%%%%% zout gain stage
+
+Rb1 = rpi1 .+ 1 ./ (1./RB1 .+ 1./RB2 .+ 1./(Zcin .+ Rin));
+
+v1x = 1 ./ (ro1 .* (1./RE1 .+ 1./Zcb .+ rpi1.*gm1./Rb1 .+ 1./ro1 .- 1./Rb1)) .* vo1;
+ix = (vo1 .- v1x) ./ ro1 .- gm1.*rpi1.*v1x./Rb1;
+Zx = vo1 ./ ix;
+
+Zo1 = 1./ (1./RC1 .+ 1./Zx);
+
+  %%%%%%%% output stage
+
+Rb2 = rpi2 .+ 1./ (1./RE2 .+ 1./(Zco.+RL) .+ 1./ro2);
+%vi2 = Rb2 ./ (Rb2 .+ Zo1) .* vo1;
+vi2 = vo1;
+v2 = (gm2 .+ 1./rpi2) ./ (1./RE2 .+ 1./(Zco.+RL) .+ 1./ro2 .+ gm2 .+ 1./rpi2) .* vi2;
+
+vo2 = RL ./ (RL .+ Zco) .* v2;
+
+
+
+%%%%%%%%%%%%%%%%% FIGURE
+
+Av1 = 20*log10(abs(vo1 ./ vin0));
+Av2 = abs(vo2 ./ vo1);
+Av = 20*log10(abs(vo2 ./ vin0));
+
+printf("\nAv2(100kHz) = %e", Av2(40));
+printf("\nAv1(100kHz) = %e dB", Av1(40));
+printf("\nAv(100kHz) = %e dB", Av(40));
+
+hf = figure ();
+
+plot(log10(f), Av1)
+hold
+plot(log10(f), Av)
+
+title("Output gain (f)")
+xlabel ("log10(f) [Hz]")
+legend("Av1", "Av")
+print (hf,"gain.eps", "-depsc");
+close(hf);
