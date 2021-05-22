@@ -62,22 +62,12 @@ vin0 = 1e-2
 
   %%%%%%% gain stage
   
-  Rb = 1./( 1./(rpi1 .+ 1./(1./RE1.+1./Zcb)) .+ 1./RB1 .+ 1./RB2);
+  Rb = 1./( 1./(rpi1 .+ 1./(1./RE1.+1./Zcb.+1./(ro1.+RC1))) .+ 1./RB1 .+ 1./RB2);
 vi1 = Rb./(Rin.+Zcb.+Rb) .* vin0;
 
 v1 = (gm1 .+ 1./rpi1 .+ RC1.*gm1./(ro1.-RC1)).*vi1./(1./RE1.+1./Zcb.+gm1.+1./ro1.+1./rpi1.+RC1.*(1./ro1.+gm1)./(ro1.-RC1));
 
 vo1 = RC1 .* (gm1 .* (vi1 .- v1) .- v1./ro1) ./ (1 .- RC1./ro1);
-
-  %%%%%%% zout gain stage
-
-Rb1 = rpi1 .+ 1 ./ (1./RB1 .+ 1./RB2 .+ 1./(Zcin .+ Rin));
-
-v1x = 1 ./ (ro1 .* (1./RE1 .+ 1./Zcb .+ rpi1.*gm1./Rb1 .+ 1./ro1 .- 1./Rb1)) .* vo1;
-ix = (vo1 .- v1x) ./ ro1 .- gm1.*rpi1.*v1x./Rb1;
-Zx = vo1 ./ ix;
-
-Zo1 = 1./ (1./RC1 .+ 1./Zx);
 
   %%%%%%%% output stage
 

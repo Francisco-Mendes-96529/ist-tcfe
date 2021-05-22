@@ -94,6 +94,7 @@ hardcopy vo1f.ps vdb(coll) vp(coll)*180/pi
 hardcopy vo2f.ps vdb(out) vp(out)*180/pi
 
 hardcopy votf.ps vdb(out) vdb(coll)
+echo "votf_FIG"
 
 
 *input impedance in kohm
