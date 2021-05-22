@@ -5,11 +5,11 @@
 The purpose of this laboratory assignment is to make an Audio Amplifier, with an $8\Omega$ speaker, with the goal to get the highest merit, M, possible.
 $$ M = \frac{voltageGain \times bandwidth}{cost \times lowerCutoffFreq}$$
 
-Using the circuit shown in Figure~\ref{fig:t4-audioamplifier}, we tested different values for the resistors and capacitors and we found that the values in Table~\ref{tab:values} yielded the best merit.
+Using the circuit shown in Figure~\ref{fig:t4-transistors}, we tested different values for the resistors and capacitors and we found that the values in Table~\ref{tab:values} yielded the best merit.
 
 In Section~\ref{sec:simulation}, the circuit is analyzed by simulation using the software Ngspice. 
 
-In Section~\ref{sec:analysis}, an approximated theoretical model, using the software GNU Octave, of the circuit in Figure~\ref{} is presented. 
+In Section~\ref{sec:analysis}, an approximated theoretical model, using the software GNU Octave, of the circuit in Figure~\ref{fig:t4-equiv} is presented. 
 
 In Section~\ref{sec:comparison}, a comparison is done between the results obtained by both analyses, theoretical and simulation.
 
@@ -34,27 +34,20 @@ The conclusions of this study are outlined in Section~\ref{sec:conclusion}.
     \caption{Resistance and Capacitance for the components}
 \end{table}
 
-\begin{comment}
+
 \begin{figure}[ht!]
 \centering
-    \includegraphics[width=0.8\linewidth]{t3-transformer.pdf}
-\caption{Circuit T3, with transformer.}
-\label{fig:t3-transformer}
+    \includegraphics[width=0.8\linewidth]{t4-transistors.pdf}
+\caption{Circuit T4, with transistors.}
+\label{fig:t4-transistors}
 \end{figure}
 
 \begin{figure}[ht!]
 \centering
-    \includegraphics[width=0.8\linewidth]{t3-depSources.pdf}
-\caption{Circuit T3, with transformer equivalent.}
-\label{fig:t3-depSources}
+    \includegraphics[width=0.8\linewidth]{t4-circuit2.pdf}
+\caption{Circuit T4, with transistors equivalent.}
+\label{fig:t4-equiv}
 \end{figure}
 
-\begin{figure}[ht!]
-\centering
-    \includegraphics[width=0.8\linewidth]{t3-lp.pdf}
-\caption{Circuit T3, with low-pass filter.}
-\label{fig:t3-lp}
-\end{figure}
-\end{comment}
 \FloatBarrier
 \clearpage

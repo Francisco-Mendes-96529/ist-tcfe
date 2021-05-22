@@ -58,7 +58,7 @@ set color6=rgb:4/0/0
 *tran 1e-5 1e-2
 
 * frequency analysis
-ac dec 10 10 100MEG
+ac dec 10 1 100MEG
 
 
 
@@ -69,6 +69,15 @@ echo "* output impedance ohm *"
 echo "************************"
 *print v(out)[40] vo#branch[40]
 print v(out)[40]/vo#branch[40]/(-1)
+
+let Zo=v(out)[40]/vo#branch[40]/(-1)
+let real=Re(Zo)
+let imag=Im(Zo)
+let absl=abs(Zo)
+echo "outputZ_TAB"
+echo "Zo = $&real + $&imag j"
+echo "|Zo| = $&absl"
+echo "outputZ_END"
 
 
 
