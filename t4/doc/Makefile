@@ -8,11 +8,12 @@ FILE=report
 #list of LibreOffice Draw files
 LODFIGS = $(patsubst %.odg,%.pdf,$(wildcard *.odg))
 LODFIGSMAT = $(patsubst ../mat/%.eps,../mat/%.pdf,$(wildcard ../mat/*.eps))
+LODFIGSSIM = $(patsubst ../sim/%.ps,../sim/%.pdf,$(wildcard ../sim/*.ps))
 
 all: $(FILE).pdf
 	evince $< &
 
-$(FILE).pdf: $(wildcard *.tex) $(LODFIGS) $(LODFIGSMAT)
+$(FILE).pdf: $(wildcard *.tex) $(LODFIGS) $(LODFIGSMAT) $(LODFIGSSIM)
 #	cp -f ../mat/*.eps .
 	pdflatex  $(FILE).tex
 	pdflatex  $(FILE).tex
@@ -25,6 +26,10 @@ $(FILE).pdf: $(wildcard *.tex) $(LODFIGS) $(LODFIGSMAT)
 
 #convert eps figures to pdf
 ../mat/%.pdf: ../mat/%.eps
+	epstopdf $<
+
+#convert ps figures to pdf
+../sim/%.pdf: ../sim/%.ps
 	epstopdf $<
 
 clean:
