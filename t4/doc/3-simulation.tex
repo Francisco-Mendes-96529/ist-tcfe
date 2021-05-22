@@ -2,45 +2,29 @@
 \section{Simulation Analysis}
 \label{sec:simulation}
 
-\subsection{Process}
 
-For an AC/DC converter is needed an envelope detector and a voltage regulator in parallel.
+The plots obtained are shown in Figure~\ref{fig:votf}. The impedance at the input and
+output, the gain, the lower and upper cut-off frequencies, the bandwidth, the cost and
+the merit are presented in Table~\ref{tab:sim}.\\
 
-The envelope detector is usually a full-wave bridge rectifier in parallel
-with a capacitor and a resistor.
-
-The voltage regulator is a resistor in series with a set of diodes.
-
-After analyzing these two sub-circuits, we concluded that a resistor in parallel
-with the capacitor was not needed, since we had a resistor in the voltage
-regulator, and that was the only resistor necessary.
-
-Sequentially, we tested different values in order to obtain the best merit possible.
-
-
-\subsection{Results}
-
-The plots obtained are shown in Figure~\ref{fig:dc-23-45}. The ripple and average at the output
-of the envelope detector, ve, and voltage regulator, vo, and merit are presented in Table~\ref{tab:t3}.\\
-
-
-\begin{minipage}[b]{0.46\textwidth}
-\centering
-    \centering
-    \includegraphics[width=0.9\textwidth, trim={1.8cm 2cm 0 8.1cm}]{../sim/dc-23-45.pdf}
-    \captionsetup{type=figure}
-    \caption{ve, vo, (vo-12)}
-    \label{fig:dc-23-45}
+\begin{minipage}[b]{0.49\textwidth}
+  \centering
+  \includegraphics[width=0.9\textwidth]{votf.pdf}
+  \captionsetup{type=figure}
+  \caption{Plots obtained by simulation.}
+  \label{fig:votf}  
 \end{minipage}
 \hfill
-\begin{minipage}[b]{0.46\textwidth}
-\centering
-   \begin{tabular}{|l|r|}
-    \hline    
-    {\bf Name} & {\bf Value [V or \%]} \\ \hline
-    \input{../sim/t3_tab}
-   \end{tabular}
-    \captionsetup{type=table}   
-  \caption{Results obtained.}
-  \label{tab:t3}
+\begin{minipage}[b]{0.49\textwidth}
+  \centering
+  \begin{tabular}{|c|c|}
+      \hline
+       & \textbf{Value} \\ \hline
+      \input{../sim/inputZ_tab}
+      \input{../sim/outputZ_tab}
+      \input{../sim/merit_tab}
+  \end{tabular}
+  \captionsetup{type=table}
+  \caption{Results obtained by simulation.}
+  \label{tab:sim}
 \end{minipage}

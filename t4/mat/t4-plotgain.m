@@ -78,13 +78,19 @@ v2 = (gm2 .+ 1./rpi2) ./ (1./RE2 .+ 1./(Zco.+RL) .+ 1./ro2 .+ gm2 .+ 1./rpi2) .*
 
 vo2 = RL ./ (RL .+ Zco) .* v2;
 
-
-
 %%%%%%%%%%%%%%%%% FIGURE
 
 Av1 = 20*log10(abs(vo1 ./ vin0));
 Av2 = abs(vo2 ./ vo1);
 Av = 20*log10(abs(vo2 ./ vin0));
+
+MaxAv = max(Av)
+for i=1:length(Av)
+	if (Av(i) >= MaxAv-3)
+	  lowCOf = f(i)
+	  break
+	endif
+endfor
 
 printf("\nAv2(100kHz) = %e", Av2(40));
 printf("\nAv1(100kHz) = %e dB", Av1(40));

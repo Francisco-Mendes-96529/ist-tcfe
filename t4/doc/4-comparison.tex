@@ -11,3 +11,35 @@ $Deviation\ (\%)$ theoretical $\not\approx rippleperc$ simulated.
 However this assumption is needed, since without it, the analysis would become very difficult.
 
 Additionally, there would be always some very small differences due to the non-linearity of the equations.
+
+
+
+\begin{table}[ht!]
+  \centering
+\begin{minipage}[b]{0.59\textwidth}
+    \flushright
+    \begin{tabular}{|c|c|}
+      \hline    
+       & \textbf{Theoretical} \\ \hline
+      \input{../mat/tabtotal}
+    \end{tabular}
+\end{minipage}
+\begin{minipage}[b]{0.39\textwidth}
+\flushleft
+   \begin{tabular}{c|}
+    \hline    
+    \textbf{Simulation} \\ \hline
+    - \\ \hline
+    - \\ \hline
+    - \\ \hline
+    - \\ \hline
+    \input{../sim/zin_tab}
+    \input{../sim/zout_tab}
+    - \\ \hline
+    - \\ \hline
+    \input{../sim/gain_tab}
+   \end{tabular}
+\end{minipage}
+\caption{Comparison between theoretical and simulation values}
+\label{tab:comp}
+\end{table}

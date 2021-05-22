@@ -133,3 +133,15 @@ fprintf(ff,"$Z_{O_{total}}$ & %.5e \\\\ \\bottomrule\n", ZO);
 fprintf(ff,"\\end{tabular}");
 fclose(ff);
   
+ff = fopen("tabtotal.tex","w");
+fprintf(ff,"$Z_{I_1}$ & %6f \\\\ \\hline\n", ZI1);
+fprintf(ff,"$Z_{O_1}$ & %6f \\\\ \\hline\n", ZO1);
+fprintf(ff,"$Z_{I_2}$ & %6f \\\\ \\hline\n", ZI2);
+fprintf(ff,"$Z_{O_2}$ & %6f \\\\ \\hline\n", ZO2);
+fprintf(ff,"$Z_{I_{total}}$ & %6f \\\\ \\hline\n", ZI);
+fprintf(ff,"$Z_{O_{total}}$ & %6f \\\\ \\hline\n", ZO);
+fprintf(ff,"$Gain_1$ & %6f \\\\ \\hline\n", AV1);
+fprintf(ff,"$Gain_2$ & %6f \\\\ \\hline\n", AV2);
+fprintf(ff,"$Gain_{total}$ & %6f \\\\ \\hline\n", AV);
+fprintf(ff,"$Gain_{total}\\ (dB)$ & %6f \\\\ \\hline\n", AV_DB);
+fclose(ff);

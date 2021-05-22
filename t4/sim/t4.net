@@ -93,7 +93,8 @@ hardcopy vo1f.ps vdb(coll) vp(coll)*180/pi
 *plot vp(out)
 hardcopy vo2f.ps vdb(out) vp(out)*180/pi
 
-hardcopy votf.ps vdb(out) vdb(coll)
+let vq_db = vdb(out)-vdb(in2)
+hardcopy votf.ps vdb(in2) vdb(out) vq_db
 echo "votf_FIG"
 
 
@@ -115,7 +116,7 @@ let imag=Im(Zin)
 let absl=abs(Zin)
 echo "inputZ_TAB"
 echo "Zin = $&real + $&imag j"
-echo "|Zin| = $&absl"
+echo " $|$\ Zin $|$\ = $&absl"
 echo "inputZ_END"
 
 echo " "
@@ -124,14 +125,16 @@ echo "* merit values *"
 echo "****************"
 
 *print v(out)
-meas ac voltGainDB MAX vdb(out)
-let vabs_out = vm(out)
-meas ac voltGain MAX vabs_out
+
+meas ac voltGainDB MAX vq_db
+meas ac voltGainDBvout MAX vdb(out)
+let vq_m = vm(out)/vm(in2)
+meas ac voltGain MAX vq_m
 let voltG3 = voltGainDB-3
 print voltG3
 
-meas ac lowerCOf WHEN vdb(out)=voltG3
-meas ac upperCOf WHEN vdb(out)=voltG3 CROSS=LAST
+meas ac lowerCOf WHEN vq_db=voltG3
+meas ac upperCOf WHEN vq_db=voltG3 CROSS=LAST
 
 let bandwidth = upperCOf-lowerCOf
 print bandwidth
@@ -152,7 +155,15 @@ print cost
 print merit
 echo "merit_END"
 
-*need a different setup to measure output impedance
+******** tab total
+echo "zin_TAB"
+echo "$&absl"
+echo "zin_END"
+
+echo "gain_TAB"
+echo "$&voltGain"
+echo "$&voltGainDB"
+echo "gain_END"
 
 quit
 .endc 

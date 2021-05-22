@@ -76,9 +76,12 @@ let imag=Im(Zo)
 let absl=abs(Zo)
 echo "outputZ_TAB"
 echo "Zo = $&real + $&imag j"
-echo "|Zo| = $&absl"
+echo "$|$\ Zo $|$\ = $&absl"
 echo "outputZ_END"
 
+echo "zout_TAB"
+echo "$&absl"
+echo "zout_END"
 
 
 *need a different setup to measure output impedance

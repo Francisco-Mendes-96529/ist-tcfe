@@ -1,3 +1,4 @@
+
 .options savecurrents
 
 * PHILIPS BJT'S
@@ -5,45 +6,157 @@
 .MODEL BC547A NPN(IS=1.533E-14 ISE=7.932E-16 ISC=8.305E-14 XTI=3 BF=178.7 BR=8.628 IKF=0.1216 IKR=0.1121 XTB=1.5 VAF=69.7 VAR=44.7 VJE=0.4209 VJC=0.2 RE=0.6395 RC=0.6508 RB=1 RBM=1 IRB=1E-06 CJE=1.61E-11 CJC=4.388p XCJC=0.6193 FC=0.7762 NF=1.002 NR=1.004 NE=1.436 NC=1.207 MJE=0.3071 MJC=0.2793 TF=4.995E-10 TR=1m2 ITF=0.7021 VTF=3.523 XTF=139 EG=1.11)
 
 Vcc vcc 0 12.0
-*desligado Vin
-Vin in 0 0
+Vin in 0 0 ac 1.0 sin(0 10m 1k)
 Rin in in2 100
 
 * input coupling capacitor
-Ci in2 base 1m
+Ci in2 base 0.5m
 
 * bias circuit
-R1 vcc base 80k
+R1 vcc base 85k
 R2 base 0 20k
 
 * gain stage
 Q1 coll base emit BC547A
-Rc vcc coll 1k
-Re emit 0 100
+Rc vcc coll 700
+Re emit 0 200
 
 * bypass capacitor
-Cb emit 0 1m
+Cb emit 0 9m
 
 
 * output stage
 Q2 0 coll emit2 BC557A
-Rout emit2 vcc 100
+Rout emit2 vcc 200
 
 * output coupling capacitor
-Co emit2 out 1u
+Co emit2 out 6m
 
-* switched load to dummy source
-VL out 0 0 ac 1.0 sin(0 10m 1k)
+* load
+RL out 0 8
 
 .op
 .end
 
 .control
 
-ac dec 10 10 100MEG
+*makes plots in color
+set hcopypscolor=0
+set color0=white
+set color1=black
+set color2=red
+set color3=blue
+set color4=violet
+set color5=rgb:3/8/0
+set color6=rgb:4/0/0
 
-*output impedance in kOhms
-let zout = v(out)[40]/i(VL)[40]/(-1000)
-print zout
+* operating point analysis
+op
 
+let VBE1 = base - emit
+let VCE1 = coll - emit
+let VB1 = base
+let VC1 = coll
+let VE1 = emit
+let VEB2 = emit2 - coll
+let VEC2 = emit2
+let VB2 = coll
+let VC2 = 0
+let VE2 = emit2
+
+
+echo "op-sim_TAB"
+print @q1[ib] @q1[ie] @q1[ic]
+print VB1 VC1 VE1
+print VBE1 VCE1
+print @q2[ib] @q2[ie] @q2[ic]
+print VB2 VC2 VE2
+print VEB2 VEC2
+echo "op-sim_END"
+
+
+* time analysis
+tran 1e-5 1e-2
+*plot v(coll)
+hardcopy vo1.ps v(coll)
+
+
+* frequency analysis
+ac dec 10 1 100MEG
+*plot vdb(coll)
+*plot vp(coll)
+hardcopy vo1f.ps vdb(coll) vp(coll)*180/pi
+
+
+
+*plot vdb(out)
+*plot vp(out)
+hardcopy vo2f.ps vdb(out) vp(out)*180/pi
+
+let vq_db = vdb(out)-vdb(in2)
+hardcopy votf.ps vdb(in2) vdb(out) vq_db
+echo "votf_FIG"
+
+
+*input impedance in kohm
+*print all
+
+*plot abs(v(in2)[40]/vin#branch[40]/(-1000))
+echo "***********************"
+echo "* input impedance ohm *"
+echo "***********************"
+print v(in2)[40]/vin#branch[40]/(-1)
+*print v(in2)/vin#branch/(-1000)
+
+
+let Zin = v(in2)[40]/vin#branch[40]/(-1)
+
+let real=Re(Zin)
+let imag=Im(Zin)
+let absl=abs(Zin)
+echo "inputZ_TAB"
+echo "Zin = $&real + $&imag j"
+echo "|Zin| = $&absl"
+echo "inputZ_END"
+
+echo " "
+echo "****************"
+echo "* merit values *"
+echo "****************"
+
+*print v(out)
+
+meas ac voltGainDB MAX vq_db
+meas ac voltGainDBvout MAX vdb(out)
+let vq_m = vm(out)/vm(in2)
+meas ac voltGain MAX vq_m
+let voltG3 = voltGainDB-3
+print voltG3
+
+meas ac lowerCOf WHEN vq_db=voltG3
+meas ac upperCOf WHEN vq_db=voltG3 CROSS=LAST
+
+let bandwidth = upperCOf-lowerCOf
+print bandwidth
+
+let cost = 0.1*2 + (0.1+85+20+0.7+0.2+0.2+8m) + (0.5k+9k+6k)
+print cost
+
+let merit = voltGain*bandwidth/cost/lowerCOf
+print merit
+
+echo "merit_TAB"
+print voltGain
+print voltGainDB
+print lowerCOf
+print upperCOf
+print bandwidth
+print cost
+print merit
+echo "merit_END"
+
+*need a different setup to measure output impedance
+
+quit
 .endc 
+
