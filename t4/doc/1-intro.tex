@@ -2,28 +2,39 @@
 \label{sec:introduction}
 
 % state the learning objective 
-The purpose of this laboratory assignment is to make an AC/DC converter, from AC(230V / 50Hz) to DC(12V), with the goal to get the highest merit, M, possible.
-$$ M = \frac{1}{cost*(ripple(v_O)+average(v_O-12)+10^{-6})}$$
+The purpose of this laboratory assignment is to make an Audio Amplifier, with an $8\Omega$ speaker, with the goal to get the highest merit, M, possible.
+$$ M = \frac{voltageGain \times bandwidth}{cost \times lowerCutoffFreq}$$
 
-After some simulations with different circuits, we found the circuit shown in Figure~\ref{fig:t3-transformer} yielded the best merit.
+Using the circuit shown in Figure~\ref{fig:t4-audioamplifier}, we tested different values for the resistors and capacitors and we found that the values in Table~\ref{tab:values} yielded the best merit.
 
-The circuit above is equivalent to the circuit in Figure~\ref{fig:t3-depSources}.
+In Section~\ref{sec:simulation}, the circuit is analyzed by simulation using the software Ngspice. 
 
-In Section~\ref{sec:simulation}, it is explained the process done and the circuit is analyzed by
-simulation using the software Ngspice. 
-
-
-In Section~\ref{sec:analysis}, an approximated theoretical model, using the software GNU Octave, of the circuit is presented. 
+In Section~\ref{sec:analysis}, an approximated theoretical model, using the software GNU Octave, of the circuit in Figure~\ref{} is presented. 
 
 In Section~\ref{sec:comparison}, a comparison is done between the results obtained by both analyses, theoretical and simulation.
 
-In Section~\ref{sec:extra},  a circuit with a low-pass filter, as shown in Figure~\ref{fig:t3-lp} is analyzed by
-simulation using the software Ngspice. 
+The conclusions of this study are outlined in Section~\ref{sec:conclusion}.
 
-The conclusions of this study are outlined in
-Section~\ref{sec:conclusion}.
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{c c}
+    \toprule
+    Component & Value ($k\Omega$ or $mF$) \\ \midrule
+    $R_{in}$  & 0.1 \\
+    $C_i$     & 0.2 \\
+    $R_1$     & 80  \\
+    $R_2$     & 20  \\
+    $R_C$     & 1   \\
+    $R_E$     & 0.1 \\
+    $C_B$     & 2   \\
+    $R_{out}$ & 0.1 \\
+    $C_O$     & 2   \\
+    \end{tabular}
+    \label{tab:values}
+    \caption{Resistance and Capacitance for the components}
+\end{table}
 
-
+\begin{comment}
 \begin{figure}[ht!]
 \centering
     \includegraphics[width=0.8\linewidth]{t3-transformer.pdf}
@@ -44,6 +55,6 @@ Section~\ref{sec:conclusion}.
 \caption{Circuit T3, with low-pass filter.}
 \label{fig:t3-lp}
 \end{figure}
-
+\end{comment}
 \FloatBarrier
 \clearpage
