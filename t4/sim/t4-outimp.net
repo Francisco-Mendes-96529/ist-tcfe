@@ -20,7 +20,7 @@ Q2 0 coll out BC557A
 Rout out 0 200
 
 * load
-RL out 0 8
+*RL out 0 8
 Vo out 0 0 ac 1.0 sin(0 1 1k)
 
 .op
