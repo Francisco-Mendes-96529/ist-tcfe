@@ -1,4 +1,4 @@
-all: t4.log t4-plotgain.log
+all: t4.log t4-plotgain.log t4-NA-Gain.log
 
 .SECONDARY:
 
