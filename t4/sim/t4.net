@@ -1,3 +1,4 @@
+
 .options savecurrents
 
 * PHILIPS BJT'S
@@ -49,6 +50,30 @@ set color4=violet
 set color5=rgb:3/8/0
 set color6=rgb:4/0/0
 
+* operating point analysis
+op
+
+let VBE1 = base - emit
+let VCE1 = coll - emit
+let VB1 = base
+let VC1 = coll
+let VE1 = emit
+let VEB2 = emit2 - coll
+let VEC2 = emit2
+let VB2 = coll
+let VC2 = 0
+let VE2 = emit2
+
+
+echo "op-sim_TAB"
+print @q1[ib] @q1[ie] @q1[ic]
+print VB1 VC1 VE1
+print VBE1 VCE1
+print @q2[ib] @q2[ie] @q2[ic]
+print VB2 VC2 VE2
+print VEB2 VEC2
+echo "op-sim_END"
+
 
 * time analysis
 tran 1e-5 1e-2
@@ -87,8 +112,11 @@ echo "****************"
 echo "* merit values *"
 echo "****************"
 
-meas ac voltGain MAX vdb(out)
-let voltG3 = voltGain-3
+*print v(out)
+meas ac voltGainDB MAX vdb(out)
+let vabs_out = abs(v(out))
+meas ac voltGain MAX vabs_out
+let voltG3 = voltGainDB-3
 print voltG3
 
 meas ac lowerCOf WHEN vdb(out)=voltG3
@@ -97,7 +125,7 @@ meas ac upperCOf WHEN vdb(out)=voltG3 CROSS=LAST
 let bandwidth = upperCOf-lowerCOf
 print bandwidth
 
-let cost = 0.1*2 + (0.1+80+20+1+0.1+0.1+0.008) + (0.1k+1k+1k)
+let cost = 0.1*2 + (0.1+80+20+1+0.1+0.1+8m) + (0.1k+1k+1k)
 print cost
 
 let merit = voltGain*bandwidth/cost/lowerCOf

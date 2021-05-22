@@ -74,3 +74,50 @@ AV = (gB+gm2/gpi2*gB)/(gB+ge2+go2+gm2/gpi2*gB)*AV1
 AV_DB = 20*log10(abs(AV))
 ZI=ZI1
 ZO=1/(go2+gm2/gpi2*gB+ge2+gB)
+
+
+
+   ;
+q1_ib = IB1
+q1_ie = IE1
+q1_ic = IC1
+vb1 = VBEON + VE1
+vc1 = VO1
+ve1 = VE1
+vbe1 = vb1 - ve1
+vce1 = vc1 - ve1
+  
+q2_ib = IC2/BFP
+q2_ie = IE2
+q2_ic = IC2
+vb2 = VI2
+vc2 = 0
+ve2 = VO2
+veb2 = ve2 - vb2
+vec2 = ve2 - vc2
+  ;
+
+ff = fopen("tabop.tex","w");
+fprintf(ff,"\\begin{tabular}{cc}\n");
+fprintf(ff,"\\toprule\n");
+fprintf(ff,"Name & Value (V or A)\\\\ \\midrule\n");
+fprintf(ff,"@q1[ib] & %.5e \\\\\n", q1_ib);
+fprintf(ff,"@q1[ie] & %.5e \\\\\n", q1_ie);
+fprintf(ff,"@q1[ic] & %.5e \\\\\n", q1_ic);
+fprintf(ff,"vb1 & %.5e \\\\\n", vb1);
+fprintf(ff,"vc1 & %.5e \\\\\n", vc1);
+fprintf(ff,"ve1 & %.5e \\\\\n", ve1);
+fprintf(ff,"vbe1 & %.5e \\\\\n", vbe1);
+fprintf(ff,"vce1 & %.5e \\\\\n", vce1);
+fprintf(ff,"@q2[ib] & %.5e \\\\\n", q2_ib);
+fprintf(ff,"@q2[ie] & %.5e \\\\\n", q2_ie);
+fprintf(ff,"@q2[ic] & %.5e \\\\\n", q2_ic);
+fprintf(ff,"vb2 & %.5e \\\\\n", vb2);
+fprintf(ff,"vc2 & %.5e \\\\\n", vc2);
+fprintf(ff,"ve2 & %.5e \\\\\n", ve2);
+fprintf(ff,"veb2 & %.5e \\\\\n", veb2);
+fprintf(ff,"vec2 & %.5e \\\\ \\bottomrule\n", vec2);
+fprintf(ff,"\\end{tabular}");
+fclose(ff);
+
+  
