@@ -6,21 +6,21 @@
 
 
 *Rin base 0 100
-*R1 base 0 80k
+*R1 base 0 85k
 *R2 base 0 20k
 V0 base 0 0v
 
 * gain stage
 Q1 coll base 0 BC547A
 
-Rc 0 coll 1k
+Rc 0 coll 0.7k
 
 * output stage
 Q2 0 coll out BC557A
-Rout out 0 100
+Rout out 0 200
 
 * load
-*RL out 0 8
+RL out 0 8
 Vo out 0 0 ac 1.0 sin(0 1 1k)
 
 .op
@@ -44,7 +44,7 @@ set color6=rgb:4/0/0
 *tran 1e-5 1e-2
 
 * frequency analysis
-ac dec 10 10 100MEG
+ac dec 10 1 100MEG
 
 
 
@@ -55,6 +55,15 @@ echo "* output impedance ohm *"
 echo "************************"
 *print v(out)[40] vo#branch[40]
 print v(out)[40]/vo#branch[40]/(-1)
+
+let Zo=v(out)[40]/vo#branch[40]/(-1)
+let real=Re(Zo)
+let imag=Im(Zo)
+let absl=abs(Zo)
+echo "outputZ_TAB"
+echo "Zo = $&real + $&imag j"
+echo "|Zo| = $&absl"
+echo "outputZ_END"
 
 
 

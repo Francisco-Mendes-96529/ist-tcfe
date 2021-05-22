@@ -3,9 +3,9 @@
 VT=25.9e-3
 BFN=178.7
 VAFN=69.7
-RE1=100
-RC1=1000
-RB1=80000
+RE1=200
+RC1=700
+RB1=85000
 RB2=20000
 VBEON=0.7
 VCC=12
@@ -27,7 +27,7 @@ ro1=VAFN/IC1
 %ouput stage
 BFP = 227.3
 VAFP = 37.2
-RE2 = 100
+RE2 = 200
 VEBON = 0.7
 VI2 = VO1
 IE2 = (VCC-VEBON-VI2)/RE2
@@ -45,12 +45,12 @@ ge2 = 1/RE2
 
    %%%%%%%%%%%%%%%%%%;
 Rin = 100
-Cin = 0.2e-3
-Cb = 2e-3
-Co = 2e-3
+Cin = 0.5e-3
+Cb = 9e-3
+Co = 6e-3
 RL = 8
 
-f = logspace(1, 8, 71);
+f = logspace(0, 8, 81);
 w = 2*pi*f;
 
 Zcin = 1./(i.*w.*Cin);

@@ -10,27 +10,27 @@ Vin in 0 0 ac 1.0 sin(0 10m 1k)
 Rin in in2 100
 
 * input coupling capacitor
-Ci in2 base 0.2m
+Ci in2 base 0.5m
 
 * bias circuit
-R1 vcc base 80k
+R1 vcc base 85k
 R2 base 0 20k
 
 * gain stage
 Q1 coll base emit BC547A
-Rc vcc coll 1k
-Re emit 0 100
+Rc vcc coll 700
+Re emit 0 200
 
 * bypass capacitor
-Cb emit 0 2m
+Cb emit 0 9m
 
 
 * output stage
 Q2 0 coll emit2 BC557A
-Rout emit2 vcc 100
+Rout emit2 vcc 200
 
 * output coupling capacitor
-Co emit2 out 2m
+Co emit2 out 6m
 
 * load
 RL out 0 8
@@ -82,7 +82,7 @@ hardcopy vo1.ps v(coll)
 
 
 * frequency analysis
-ac dec 10 10 100MEG
+ac dec 10 1 100MEG
 *plot vdb(coll)
 *plot vp(coll)
 hardcopy vo1f.ps vdb(coll) vp(coll)*180/pi
@@ -106,11 +106,17 @@ echo "* input impedance ohm *"
 echo "***********************"
 print v(in2)[40]/vin#branch[40]/(-1)
 *print v(in2)/vin#branch/(-1000)
-let inputimpedance = v(in2)[40]/vin#branch[40]/(-1)
 
-echo "imputZ_TAB"
-print inputimpedance
-echo "imputZ_END"
+
+let Zin = v(in2)[40]/vin#branch[40]/(-1)
+
+let real=Re(Zin)
+let imag=Im(Zin)
+let absl=abs(Zin)
+echo "inputZ_TAB"
+echo "Zin = $&real + $&imag j"
+echo "|Zin| = $&absl"
+echo "inputZ_END"
 
 echo " "
 echo "****************"
@@ -130,7 +136,7 @@ meas ac upperCOf WHEN vdb(out)=voltG3 CROSS=LAST
 let bandwidth = upperCOf-lowerCOf
 print bandwidth
 
-let cost = 0.1*2 + (0.1+80+20+1+0.1+0.1+8m) + (0.2k+2k+2k)
+let cost = 0.1*2 + (0.1+85+20+0.7+0.2+0.2+8m) + (0.5k+9k+6k)
 print cost
 
 let merit = voltGain*bandwidth/cost/lowerCOf

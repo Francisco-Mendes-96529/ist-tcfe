@@ -3,9 +3,9 @@
 VT=25.9e-3
 BFN=178.7
 VAFN=69.7
-RE1=100
-RC1=1000
-RB1=80000
+RE1=200
+RC1=700
+RB1=85000
 RB2=20000
 VBEON=0.7
 VCC=12
@@ -38,7 +38,7 @@ AV1_DB = 20*log10(abs(AV1))
 AV1simple =  - RSB/RS * gm1*RC1/(1+gm1*RE1)
 AV1simple_DB = 20*log10(abs(AV1simple))
 
-RE1=100
+RE1=200
 ZI1 = 1/(1/RB+1/(((ro1+RC1+RE1)*(rpi1+RE1)+gm1*RE1*ro1*rpi1 - RE1^2)/(ro1+RC1+RE1)))
 ZX = ro1*((RSB+rpi1)*RE1/(RSB+rpi1+RE1))/(1/(1/ro1+1/(rpi1+RSB)+1/RE1+gm1*rpi1/(rpi1+RSB)))
 ZX = ro1*(   1/RE1+1/(rpi1+RSB)+1/ro1+gm1*rpi1/(rpi1+RSB)  )/(   1/RE1+1/(rpi1+RSB) ) 
@@ -51,7 +51,7 @@ ZO1 = 1/(1/ro1+1/RC1)
 %ouput stage
 BFP = 227.3
 VAFP = 37.2
-RE2 = 100
+RE2 = 200
 VEBON = 0.7
 VI2 = VO1
 IE2 = (VCC-VEBON-VI2)/RE2
@@ -120,4 +120,16 @@ fprintf(ff,"vec2 & %.5e \\\\ \\bottomrule\n", vec2);
 fprintf(ff,"\\end{tabular}");
 fclose(ff);
 
+ff = fopen("tabz.tex","w");
+fprintf(ff,"\\begin{tabular}{cc}\n");
+fprintf(ff,"\\toprule\n");
+fprintf(ff,"Impedance & Value ($\\Omega$)\\\\ \\midrule\n");
+fprintf(ff,"$Z_{I_1}$ & %.5e \\\\\n", ZI1);
+fprintf(ff,"$Z_{O_1}$ & %.5e \\\\\n", ZO1);
+fprintf(ff,"$Z_{I_2}$ & %.5e \\\\\n", ZI2);
+fprintf(ff,"$Z_{O_2}$ & %.5e \\\\\n", ZO2);
+fprintf(ff,"$Z_{I_{total}}$ & %.5e \\\\\n", ZI);
+fprintf(ff,"$Z_{O_{total}}$ & %.5e \\\\ \\bottomrule\n", ZO);
+fprintf(ff,"\\end{tabular}");
+fclose(ff);
   
