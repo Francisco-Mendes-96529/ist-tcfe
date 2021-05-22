@@ -10,7 +10,7 @@ Vin in 0 0 ac 1.0 sin(0 10m 1k)
 Rin in in2 100
 
 * input coupling capacitor
-Ci in2 base 0.1m
+Ci in2 base 0.2m
 
 * bias circuit
 R1 vcc base 80k
@@ -22,7 +22,7 @@ Rc vcc coll 1k
 Re emit 0 100
 
 * bypass capacitor
-Cb emit 0 1m
+Cb emit 0 2m
 
 
 * output stage
@@ -30,7 +30,7 @@ Q2 0 coll emit2 BC557A
 Rout emit2 vcc 100
 
 * output coupling capacitor
-Co emit2 out 1m
+Co emit2 out 2m
 
 * load
 RL out 0 8
@@ -105,7 +105,11 @@ echo "* input impedance ohm *"
 echo "***********************"
 print v(in2)[40]/vin#branch[40]/(-1)
 *print v(in2)/vin#branch/(-1000)
+let inputimpedance = v(in2)[40]/vin#branch[40]/(-1)
 
+echo "imputZ_TAB"
+print inputimpedance
+echo "imputZ_END"
 
 echo " "
 echo "****************"
@@ -114,7 +118,7 @@ echo "****************"
 
 *print v(out)
 meas ac voltGainDB MAX vdb(out)
-let vabs_out = abs(v(out))
+let vabs_out = vm(out)
 meas ac voltGain MAX vabs_out
 let voltG3 = voltGainDB-3
 print voltG3
@@ -125,11 +129,21 @@ meas ac upperCOf WHEN vdb(out)=voltG3 CROSS=LAST
 let bandwidth = upperCOf-lowerCOf
 print bandwidth
 
-let cost = 0.1*2 + (0.1+80+20+1+0.1+0.1+8m) + (0.1k+1k+1k)
+let cost = 0.1*2 + (0.1+80+20+1+0.1+0.1+8m) + (0.2k+2k+2k)
 print cost
 
 let merit = voltGain*bandwidth/cost/lowerCOf
 print merit
+
+echo "merit_TAB"
+print voltGain
+print voltGainDB
+print lowerCOf
+print upperCOf
+print bandwidth
+print cost
+print merit
+echo "merit_END"
 
 *need a different setup to measure output impedance
 
