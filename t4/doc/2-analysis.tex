@@ -1,75 +1,82 @@
 \section{Theoretical Analysis}
 \label{sec:analysis}
 
-In this section, the circuit shown in Figure~\ref{fig:t3-depSources} is analyzed
+In this section, the circuit shown in Figure~\ref{fig:t4-equiv} is analyzed
 theoretically, according to the following steps.
 
-With $i_P$ ($v_P$), the current (voltage) through the diodes of the bridge rectifier.
-In order to calculate $v_{D}$ and $v_{D\ next}$, the Newton-Raphson method was used.
-
-
 \subsection{Step 1}\label{subsec:step1}
-The circuit was analyzed considering the voltage across C as constant,
-$$\dot{v}_C = 0 \Rightarrow i_P=i_D \Rightarrow v_P=v_D$$, for $t = T/4 \,s$
-resulting in the following equations:
+The circuit was analyzed by operating point in order to obtain the values for the components
+of the equivalent transistors, $r_{\pi}$, $r_o$ and $g_m$, as shown in
+Table~\ref{tab:op-trans-teo}.
 
-\begin{equation}\label{step1}
-  \begin{split}
-    v_2(T/4) &= 2v_P + v_R + 25v_D\\
-    &= 27v_D + RI_s(e^{\frac{v_D}{V_T}}-1)\\
-  \end{split}
-\end{equation}
-\vspace{-15pt}
-\begin{align}
-  f(v_D)&=27v_D + RI_s(e^{\frac{v_D}{V_T}}-1) - v_2(T/4)\\
-  f'(v_D)&=27 + \frac{RI_s}{V_T}e^{\frac{v_D}{V_T}}\\
-  v_C&=RI_S(e^{\frac{v_D}{V_T}}-1) + 25v_D
-\end{align}
-
-
+\begin{table}[ht!]
+  \centering
+  \input{../mat/tabop-trans}
+  \caption{Results obtained by theoretical operating point.}
+  \label{tab:op-trans-teo}
+\end{table}
 
 
 \subsection{Step 2}\label{subsec:step2}
-The circuit was analyzed considering that the voltage across C is not constant and
-therefore the capacitor is discharging, resulting in the following equations,
-for $t \geq T/4 \,s$:
-
-\begin{align}\label{step2}
-  i_C &= C\dot{v}_C\\
-  i_P &= i_C + i_D
-\end{align}
-\vspace{-15pt}
-\begin{equation}
-\begin{split}
-  \dot{v}_C &= \frac{I_s(e^{\frac{v_P}{V_T}}-e^{\frac{v_D}{V_T}})}{C}\\
-  \Leftrightarrow v_{C\ next} &= \frac{I_s(e^{\frac{v_P}{V_T}}-e^{\frac{v_D}{V_T}})}{C}h + v_C
-\end{split}
-\end{equation}
-\vspace{-15pt}
-\begin{align}
-  f(v_{D\ next})&=25v_D + RI_s(e^{\frac{v_D}{V_T}}-1) - v_{C\ next}\\
-  f'(v_{D\ next})&=25 + \frac{RI_s}{V_T}e^{\frac{v_D}{V_T}}\\
-  v_{P\ next} &= \frac{abs(v_2) - 25v_{D\ next} + RI_s(e^{\frac{v_D}{V_T}}-1)}{2}
-\end{align}
+Then we calculated the impedances ($\Omega$) and gain for each stage (transistor) and for the total circuit, as shown in Table~\ref{tab:tabz}.
 
 
-
-\subsection{Results}
-The results obtained are shown in Table~\ref{tab:vout}, and the plots in
-Figure~\ref{fig:vT3}.\\
-
-\begin{minipage}[b]{0.48\textwidth}
+\begin{table}[ht!]
   \centering
-  \input{../mat/tabvout}
-  \captionsetup{type=table}
-  \caption{Results obtained.}
-  \label{tab:vout}
-\end{minipage}
-\hfil
-\begin{minipage}[b]{0.48\textwidth}
+  \input{../mat/tabz}
+  \caption{Impedances and gain obtained.}
+  \label{tab:tabz}
+\end{table}
+
+By observation, one can say that the 2 stages can be connected without significant signal loss, because the input impedance of the second stage is much greater than the output impedance of the first stage. The same applies for the total input impedance of the circuit and the impedance of the voltage source, and for the impedance of the speaker and the total output impedance of the circuit.
+
+
+\subsection{Step 3}\label{subsec:step3}
+Next, we performed node analysis for $f \in [1; 100M]\ Hz$:
+
+\begin{equationfit}\label{step3}
+  \begin{bmatrix}
+    -G_{in}-Y_{cin} & Y_{cin} & 0 & 0 \\
+    Y_{cin} & -Y_{cin}-G_1-G_2-g_{\pi1}-Y_{be1}-Y_{bc1} & g_{\pi1}+Y_{be1} & Y_{bc1} \\
+    0 & g_{\pi1}+g_{m1}+Y_{be1} & -g_{\pi1}-G_E-Y_{cb}-g_{m1}-g_{o1}-Y_{be1} & g_{o1} \\
+    0 & -g_{m1}+Y_{bc1} & g_{m1}+g_{o1} & G_C-g_{o1}-Y_{bc1} \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    v_{ib}\\
+    v_{i1}\\
+    v_{e1}\\
+    v_{o1}\\
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    -v_{i0}G_{in}\\
+    0\\
+    0\\
+    0\\
+  \end{bmatrix}
+\end{equationfit}
+\begin{gather}
+  v_{in2} = v_{o1}\\
+  v_{e2} = \frac{g_{\pi2}+g_{m2}+Y_{be2}}{g_{\pi2}+G_O+\frac{1}{Z_{co}+R_L}+g_{m2}+g_{o2}+Y_{be2}}v_{i2}\\
+  v_{o2} = \frac{R_L}{R_L+Z_{co}}v_{e2}
+\end{gather}
+
+Solving the previous equations, the results are shown in Figure~\ref{fig:gain} and in Table~\ref{tab:NA}.\\
+
+\begin{minipage}[b]{0.49\textwidth}
   \centering
-  \includegraphics[width=0.9\textwidth]{vT3.pdf}
+  \includegraphics[width=0.9\textwidth]{gain.pdf}
   \captionsetup{type=figure}
-  \caption{Plots obtained.}
-  \label{fig:vT3}
+  \caption{Plots obtained by theo. analysis.}
+  \label{fig:gain}  
 \end{minipage}
+\hfill
+\begin{minipage}[b]{0.49\textwidth}
+  \centering
+  \input{../mat/tabNA}
+  \captionsetup{type=table}
+  \caption{Results obtained by node analysis.}
+  \label{tab:NA}
+\end{minipage}
+
+

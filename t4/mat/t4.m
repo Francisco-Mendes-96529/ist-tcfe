@@ -60,7 +60,9 @@ VO2 = VCC - RE2*IE2
 
 gm2 = IC2/VT
 go2 = IC2/VAFP
+ro2 = 1/go2
 gpi2 = gm2/BFP
+rpi2 = 1/gpi2
 ge2 = 1/RE2
 
 AV2 = gm2/(gm2+gpi2+go2+ge2)
@@ -97,6 +99,19 @@ veb2 = ve2 - vb2
 vec2 = ve2 - vc2
   ;
 
+ff = fopen("tabop-trans.tex","w");
+fprintf(ff,"\\begin{tabular}{cc}\n");
+fprintf(ff,"\\toprule\n");
+fprintf(ff,"Name & Value ($\\Omega$ or $S$)\\\\ \\midrule\n");
+fprintf(ff,"$r_{\pi1}$ & %.5e \\\\\n", rpi1);
+fprintf(ff,"$r_{o1}$ & %.5e \\\\\n", ro1);
+fprintf(ff,"$g_{m1}$ & %.5e \\\\\n", gm1);
+fprintf(ff,"$r_{\pi2}$ & %.5e \\\\\n", rpi2);
+fprintf(ff,"$r_{o2}$ & %.5e \\\\\n", ro2);
+fprintf(ff,"$g_{m2}$ & %.5e \\\\ \\bottomrule\n", gm2);
+fprintf(ff,"\\end{tabular}");
+fclose(ff);
+
 ff = fopen("tabop.tex","w");
 fprintf(ff,"\\begin{tabular}{cc}\n");
 fprintf(ff,"\\toprule\n");
@@ -123,13 +138,17 @@ fclose(ff);
 ff = fopen("tabz.tex","w");
 fprintf(ff,"\\begin{tabular}{cc}\n");
 fprintf(ff,"\\toprule\n");
-fprintf(ff,"Impedance & Value ($\\Omega$)\\\\ \\midrule\n");
+fprintf(ff," & Value\\\\ \\midrule\n");
 fprintf(ff,"$Z_{I_1}$ & %.5e \\\\\n", ZI1);
 fprintf(ff,"$Z_{O_1}$ & %.5e \\\\\n", ZO1);
 fprintf(ff,"$Z_{I_2}$ & %.5e \\\\\n", ZI2);
 fprintf(ff,"$Z_{O_2}$ & %.5e \\\\\n", ZO2);
 fprintf(ff,"$Z_{I_{total}}$ & %.5e \\\\\n", ZI);
-fprintf(ff,"$Z_{O_{total}}$ & %.5e \\\\ \\bottomrule\n", ZO);
+fprintf(ff,"$Z_{O_{total}}$ & %.5e \\\\\n", ZO);
+fprintf(ff,"$Gain_1$ & %6f \\\\\n", AV1);
+fprintf(ff,"$Gain_2$ & %6f \\\\\n", AV2);
+fprintf(ff,"$Gain_{total}$ & %6f \\\\\n", AV);
+fprintf(ff,"$Gain_{total}\\ (dB)$ & %6f \\\\ \\bottomrule\n", AV_DB);
 fprintf(ff,"\\end{tabular}");
 fclose(ff);
   
@@ -143,5 +162,5 @@ fprintf(ff,"$Z_{O_{total}}$ & %6f \\\\ \\hline\n", ZO);
 fprintf(ff,"$Gain_1$ & %6f \\\\ \\hline\n", AV1);
 fprintf(ff,"$Gain_2$ & %6f \\\\ \\hline\n", AV2);
 fprintf(ff,"$Gain_{total}$ & %6f \\\\ \\hline\n", AV);
-fprintf(ff,"$Gain_{total}\\ (dB)$ & %6f \\\\ \\hline\n", AV_DB);
+fprintf(ff,"$Gain_{total}\\ (dB)$ & %6f \\\\ \\cline{2-2}\n", AV_DB);
 fclose(ff);

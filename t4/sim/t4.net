@@ -93,8 +93,8 @@ hardcopy vo1f.ps vdb(coll) vp(coll)*180/pi
 *plot vp(out)
 hardcopy vo2f.ps vdb(out) vp(out)*180/pi
 
-let vq_db = vdb(out)-vdb(in2)
-hardcopy votf.ps vdb(in2) vdb(out) vq_db
+let Av_db = vdb(out)-vdb(in2)
+hardcopy votf.ps vdb(in2) vdb(out) Av_db
 echo "votf_FIG"
 
 
@@ -126,15 +126,15 @@ echo "****************"
 
 *print v(out)
 
-meas ac voltGainDB MAX vq_db
+meas ac voltGainDB MAX Av_db
 meas ac voltGainDBvout MAX vdb(out)
 let vq_m = vm(out)/vm(in2)
 meas ac voltGain MAX vq_m
 let voltG3 = voltGainDB-3
 print voltG3
 
-meas ac lowerCOf WHEN vq_db=voltG3
-meas ac upperCOf WHEN vq_db=voltG3 CROSS=LAST
+meas ac lowerCOf WHEN Av_db=voltG3
+meas ac upperCOf WHEN Av_db=voltG3 CROSS=LAST
 
 let bandwidth = upperCOf-lowerCOf
 print bandwidth
@@ -164,6 +164,12 @@ echo "gain_TAB"
 echo "$&voltGain"
 echo "$&voltGainDB"
 echo "gain_END"
+
+echo "freq_TAB"
+echo "$&lowerCOf"
+echo "$&upperCOf"
+echo "$&bandwidth"
+echo "freq_END"
 
 quit
 .endc 

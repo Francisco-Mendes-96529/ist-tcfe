@@ -79,6 +79,26 @@
 \usepackage{amssymb}
 \usepackage{epstopdf}
 
+
+%%%%%%%% Resize equations
+\usepackage{environ}         % provides \BODY
+\usepackage{etoolbox}        % provides \ifdimcomp
+\usepackage{adjustbox}       % provides \adjustbox
+%% Resize equations
+\newlength{\myl}
+\let\origequation=\equation
+\let\origendequation=\endequation
+%% equationfit
+\NewEnviron{equationfit}{
+  \settowidth{\myl}{$\BODY$}                       % calculate width and save as \myl
+  \origequation
+  \ifdimcomp{\the\linewidth}{>}{\the\myl}
+  {\ensuremath{\BODY}}                             % True
+  {\resizebox{\linewidth}{!}{\ensuremath{\BODY}}}  % False
+  \origendequation
+}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %     Begin Document                                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -150,11 +170,11 @@
 
 \input{3-simulation}
 
-% \input{2-analysis}
+\input{2-analysis}
 
-% \input{4-comparison}
+\input{4-comparison}
 
-% \input{5-conclusion}
+\input{5-conclusion}
 %\cleardoublepage
 
 %\input{experiencia}
