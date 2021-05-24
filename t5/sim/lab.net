@@ -13,7 +13,7 @@ X1 in inv_in vcc vee out uA741
 * non-inv +
 C1 vin in 220n
 *C1b vin in 220n
-R1 in 0 2k
+R1 in 0 1k
 *R1b in 0 1k
 
 * inv -
