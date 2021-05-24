@@ -1,4 +1,3 @@
-*-----------------------------------------------------------------------------
 *
 * To use a subcircuit, the name must begin with 'X'.  For example:
 * X1 1 2 3 4 5 uA741
@@ -44,48 +43,3 @@
 .model dx D(Is=800.0E-18 Rs=1)
 .model qx NPN(Is=800.0E-18 Bf=93.75)
 .ends
-
-
-
-.options savecurrents
-
-Vcc vcc 0 5.0
-Vee vee 0 -5.0
-Vin in 0 0 ac 1.0 sin(0 10m 1k)
-
-X1 0 inv_in vcc vee out uA741
-
-R1 in inv_in 1k
-R2 inv_in out 10k
-
-* load
-RL out 0 8
-
-.op
-.end
-
-.control
-
-op
-print all
-
-* time analysis
-tran 1e-5 1e-2
-*plot v(out)
-hardcopy vo1.ps v(out)
-
-
-* frequency analysis
-ac dec 10 10 100MEG
-*plot vdb(out)
-*plot vp(out)
-hardcopy vo1f.ps vdb(out)
-
-*input impedance in kohm
-print v(in)[40]/R1[i]/1000
-
-*need a different setup to measure output impedance
-
-quit
-.endc 
-

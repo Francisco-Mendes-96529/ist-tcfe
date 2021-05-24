@@ -1,0 +1,125 @@
+OP-AMP passband
+
+.inc uA741.inc
+
+.options savecurrents
+
+Vcc vcc 0 10.0
+Vee vee 0 -10.0
+Vin vin 0 0 ac 1.0 sin(0 700m 1k)
+
+X1 in inv_in vcc vee out uA741
+
+* non-inv +
+C1 vin in 220n
+*C1b vin in 220n
+R1 in 0 2k
+*R1b in 0 1k
+
+* inv -
+R3 inv_in r3b 100k
+R3b r3b out 100k
+R3c r3b out 100k
+
+R4 inv_in 0 1k
+*R4b inv_in 0 2k
+*R4c inv_in 0 10k
+
+* load
+R2 out vout 1k
+*R2b out vout 1k
+C2 vout 0 110n
+*C2b c2bb 0 220n
+
+.op
+.end
+
+.control
+
+*makes plots in color
+set hcopypscolor=0
+set color0=white
+set color1=black
+set color2=red
+set color3=blue
+set color4=violet
+set color5=rgb:3/8/0
+set color6=rgb:4/0/0
+
+
+
+*op
+*print all
+
+* time analysis
+tran 1e-5 1e-2
+*plot v(out)
+*hardcopy lab-vo1.ps v(vout)
+
+*input impedance in kohm
+print v(in)[40]/@R1[i][40]/1000
+
+
+* frequency analysis
+ac dec 10 10 100k
+*plot vdb(out)
+*plot vp(out)
+hardcopy lab-vo1f.ps vdb(vout)
+
+
+echo ""
+echo "****************"
+echo "* Cut-off Freq *"
+echo "****************"
+
+* cut-off freqs
+
+let Av_db = vdb(vout)-vdb(vin)
+meas ac voltGainDB MAX Av_db
+let Av_m = vm(vout)/vm(vin)
+meas ac voltGain MAX Av_m
+let voltG3 = voltGainDB-3
+*print voltG3
+
+meas ac lowCOf WHEN Av_db=voltG3
+meas ac highCOf WHEN Av_db=voltG3 CROSS=LAST
+
+let avgCOf = sqrt(lowCOf*highCOf)
+print avgCOf
+
+echo ""
+echo "* op-amp *"
+echo ""
+
+let in_m = vm(in)/vm(vin)
+meas ac inGain MAX in_m
+let out_m = vm(out)/vm(vin)
+meas ac outGain MAX out_m
+
+
+echo ""
+echo "*********"
+echo "* merit *"
+echo "*********"
+
+let gain_deviation = abs(voltGainDB - 40)
+let f_deviation = abs(avgCOf - 1k)
+let cost = (100*3 + 1*3) + (0.220*3)
+let merit = 1/(cost*gain_deviation*f_deviation)
+print gain_deviation f_deviation cost merit
+
+echo ""
+echo "****************"
+echo "* relative dev *"
+echo "****************"
+
+let gain_perc = gain_deviation/40*100
+let f_perc = f_deviation/1k*100
+print gain_perc f_perc
+
+
+*need a different setup to measure output impedance
+
+quit
+.endc 
+
