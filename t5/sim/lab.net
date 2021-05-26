@@ -8,13 +8,11 @@ Vcc vcc 0 10.0
 Vee vee 0 -10.0
 Vin vin 0 0 ac 1.0 sin(0 700m 1k)
 
-X1 in inv_in vcc vee out uA741
+X1 in_p inv_in vcc vee out uA741
 
 * non-inv +
-C1 vin in 220n
-*C1b vin in 220n
-R1 in 0 1k
-*R1b in 0 1k
+C1 vin in_p 220n
+R1 in_p 0 1k
 
 * inv -
 R3 inv_in r3b 100k
@@ -22,14 +20,10 @@ R3b r3b out 100k
 R3c r3b out 100k
 
 R4 inv_in 0 1k
-*R4b inv_in 0 2k
-*R4c inv_in 0 10k
 
 * load
-R2 out vout 1k
-*R2b out vout 1k
-C2 vout 0 110n
-*C2b c2bb 0 220n
+R2 out vo 1k
+C2 vo 0 110n
 
 .op
 .end
@@ -52,19 +46,16 @@ set color6=rgb:4/0/0
 *print all
 
 * time analysis
-tran 1e-5 1e-2
+*tran 1e-5 1e-2
 *plot v(out)
-*hardcopy lab-vo1.ps v(vout)
-
-*input impedance in kohm
-print v(in)[40]/@R1[i][40]/1000
-
+*hardcopy lab-vo1.ps v(vo) v(vin)
+*print v(vin)[45] v(vo)[45]
 
 * frequency analysis
 ac dec 10 10 100k
 *plot vdb(out)
 *plot vp(out)
-hardcopy lab-vo1f.ps vdb(vout)
+hardcopy lab-vo1f.ps vdb(vo)
 
 
 echo ""
@@ -74,9 +65,9 @@ echo "****************"
 
 * cut-off freqs
 
-let Av_db = vdb(vout)-vdb(vin)
+let Av_db = vdb(vo)-vdb(vin)
 meas ac voltGainDB MAX Av_db
-let Av_m = vm(vout)/vm(vin)
+let Av_m = vm(vo)/vm(vin)
 meas ac voltGain MAX Av_m
 let voltG3 = voltGainDB-3
 *print voltG3
@@ -91,7 +82,7 @@ echo ""
 echo "* op-amp *"
 echo ""
 
-let in_m = vm(in)/vm(vin)
+let in_m = vm(in_p)/vm(vin)
 meas ac inGain MAX in_m
 let out_m = vm(out)/vm(vin)
 meas ac outGain MAX out_m
@@ -116,6 +107,15 @@ echo "****************"
 let gain_perc = gain_deviation/40*100
 let f_perc = f_deviation/1k*100
 print gain_perc f_perc
+
+
+echo ""
+echo "******************"
+echo "* impedance kohm *"
+echo "******************"
+*input impedance in kohm
+print abs(v(vin)[20]/vin#branch[20]/(-1000))
+
 
 
 *need a different setup to measure output impedance
