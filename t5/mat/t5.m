@@ -78,42 +78,42 @@ ff = fopen("tabz.tex","w");
 fprintf(ff,"\\begin{tabular}{cc}\n");
 fprintf(ff,"\\toprule\n");
 fprintf(ff," & Value\\\\ \\midrule\n");
-fprintf(ff,"$LowFreq$ & %6f \\\\\n", lowCOf);
-fprintf(ff,"$HighFreq$ & %6f \\\\\n", highCOf);
-fprintf(ff,"$CentralFreq$ & %6f \\\\\n", centralFreq);
-fprintf(ff,"$Z_{I}$ & %6f \\\\\n", Zip);
-fprintf(ff,"$Z_{O}$ & %6f \\\\\n", Zop);
-fprintf(ff,"$Gain$ & %6f \\\\\n", Gainp);
-fprintf(ff,"$Gain\\ (dB)$ & %6f \\\\ \\bottomrule\n", Gainp_db);
+fprintf(ff,"$LowFreq$ & %g \\\\\n", lowCOf);
+fprintf(ff,"$HighFreq$ & %g \\\\\n", highCOf);
+fprintf(ff,"$CentralFreq$ & %g \\\\\n", centralFreq);
+fprintf(ff,"$Z_{I}$ & %g \\\\\n", Zip);
+fprintf(ff,"$Z_{O}$ & %g \\\\\n", Zop);
+fprintf(ff,"$Gain$ & %g \\\\\n", Gainp);
+fprintf(ff,"$Gain\\ (dB)$ & %g \\\\ \\bottomrule\n", Gainp_db);
 fprintf(ff,"\\end{tabular}");
 fclose(ff);
 
 
 
 ff = fopen("tab-line1.tex","w");
-fprintf(ff,"$LowFreq$ & %6f \n", lowCOf);
+fprintf(ff,"$LowFreq$ & %g \n", lowCOf);
 fclose(ff);
 
 ff = fopen("tab-line2.tex","w");
-fprintf(ff,"$HighFreq$ & %6f \n", highCOf);
+fprintf(ff,"$HighFreq$ & %g \n", highCOf);
 fclose(ff);
 
 ff = fopen("tab-line3.tex","w");
-fprintf(ff,"$CentralFreq$ & %6f \n", centralFreq);
+fprintf(ff,"$CentralFreq$ & %g \n", centralFreq);
 fclose(ff);
 
 ff = fopen("tab-line4.tex","w");
-fprintf(ff,"$Z_{I}$ & %6f \n", Zip);
+fprintf(ff,"$Z_{I}$ & %g \n", Zip);
 fclose(ff);
 
 ff = fopen("tab-line5.tex","w");
-fprintf(ff,"$Z_{O}$ & %6f \n", Zop);
+fprintf(ff,"$Z_{O}$ & %g \n", Zop);
 fclose(ff);
 
 ff = fopen("tab-line6.tex","w");
-fprintf(ff,"$Gain$ & %6f \n", Gainp);
+fprintf(ff,"$Gain$ & %g \n", Gainp);
 fclose(ff);
 
 ff = fopen("tab-line7.tex","w");
-fprintf(ff,"$Gain\\ (dB)$ & %6f \n", Gainp_db);
+fprintf(ff,"$Gain\\ (dB)$ & %g \n", Gainp_db);
 fclose(ff);

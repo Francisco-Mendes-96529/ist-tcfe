@@ -1,6 +1,6 @@
 LODFIGS = $(patsubst %.ps,%.pdf,$(wildcard *.ps))
 
-all: log-t5 log-lab log-lab-zo
+all: log-lab log-lab-zo
 
 log-%: %.log
 	$(eval NGSTABS=$(shell grep _TAB $< | sed 's/_TAB//g' | sed ':a;N;$!ba;s/\n/ /g'))
