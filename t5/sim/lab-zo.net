@@ -46,7 +46,7 @@ set color6=rgb:4/0/0
 ac dec 10 10 100k
 *plot vdb(out)
 *plot vp(out)
-hardcopy lab-vo1f.ps vdb(vo)
+*hardcopy lab-vo1f.ps vdb(vo)
 
 echo ""
 echo "*****************"
@@ -56,6 +56,18 @@ echo "*****************"
 print abs(v(vo)[20]/vout#branch[20]/(-1))
 
 
+let Zo=v(vo)[20]/vout#branch[20]/(-1)
+let real=Re(Zo)
+let imag=Im(Zo)
+let absl=abs(Zo)
+echo "outputZ_TAB"
+echo "Zo = $&real + $&imag j"
+echo "$|$\ Zo $|$\ = $&absl"
+echo "outputZ_END"
+
+echo "zout_TAB"
+echo "$&absl"
+echo "zout_END"
 
 quit
 .endc 

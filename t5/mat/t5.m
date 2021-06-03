@@ -1,70 +1,119 @@
 %gain stage
 
+C1 = 220e-9
+R1 = 1e3
+C2 = 110e-9
+R2 = 1e3
+R3 = 150e3
+R4 = 1e3
+
+f = 1000
+w = 2*pi*f
+
+Zc1 = 1/j/w/C1
+Zc2 = 1/j/w/C2
 
 
+   Zip = abs(Zc1+R1)
+   Zop = abs(1/(1/R2+1/Zc2))
 
-ff = fopen("tabop-trans.tex","w");
-fprintf(ff,"\\begin{tabular}{cc}\n");
-fprintf(ff,"\\toprule\n");
-fprintf(ff,"Name & Value ($\\Omega$ or $S$)\\\\ \\midrule\n");
-fprintf(ff,"$r_{\pi1}$ & %.5e \\\\\n", rpi1);
-fprintf(ff,"$r_{o1}$ & %.5e \\\\\n", ro1);
-fprintf(ff,"$g_{m1}$ & %.5e \\\\\n", gm1);
-fprintf(ff,"$r_{\pi2}$ & %.5e \\\\\n", rpi2);
-fprintf(ff,"$r_{o2}$ & %.5e \\\\\n", ro2);
-fprintf(ff,"$g_{m2}$ & %.5e \\\\ \\bottomrule\n", gm2);
-fprintf(ff,"\\end{tabular}");
-fclose(ff);
+   vm = R1/(R1+Zc1)
+   Va = (1+R3/R4)*vm
+   Gainp = abs(Zc2/(Zc2+R2)*Va)
+   Gainp_db = 20*log10(Gainp)
 
-ff = fopen("tabop.tex","w");
-fprintf(ff,"\\begin{tabular}{cc}\n");
-fprintf(ff,"\\toprule\n");
-fprintf(ff,"Name & Value (V or A)\\\\ \\midrule\n");
-fprintf(ff,"@q1[ib] & %.5e \\\\\n", q1_ib);
-fprintf(ff,"@q1[ie] & %.5e \\\\\n", q1_ie);
-fprintf(ff,"@q1[ic] & %.5e \\\\\n", q1_ic);
-fprintf(ff,"vb1 & %.5e \\\\\n", vb1);
-fprintf(ff,"vc1 & %.5e \\\\\n", vc1);
-fprintf(ff,"ve1 & %.5e \\\\\n", ve1);
-fprintf(ff,"vbe1 & %.5e \\\\\n", vbe1);
-fprintf(ff,"vce1 & %.5e \\\\\n", vce1);
-fprintf(ff,"@q2[ib] & %.5e \\\\\n", q2_ib);
-fprintf(ff,"@q2[ie] & %.5e \\\\\n", q2_ie);
-fprintf(ff,"@q2[ic] & %.5e \\\\\n", q2_ic);
-fprintf(ff,"vb2 & %.5e \\\\\n", vb2);
-fprintf(ff,"vc2 & %.5e \\\\\n", vc2);
-fprintf(ff,"ve2 & %.5e \\\\\n", ve2);
-fprintf(ff,"veb2 & %.5e \\\\\n", veb2);
-fprintf(ff,"vec2 & %.5e \\\\ \\bottomrule\n", vec2);
-fprintf(ff,"\\end{tabular}");
-fclose(ff);
+
+f = logspace(1, 5, 41);
+w = 2*pi*f;
+
+Zc1 = 1./(j*w*C1);
+Zc2 = 1./(j*w*C2);
+
+
+Zi = abs(Zc1+R1);
+Zo = abs(1./(1/R2+1./Zc2));
+
+vm = R1./(R1+Zc1);
+Va = (1+R3/R4).*vm;
+Ts = Zc2./(Zc2+R2).*Va;
+Gain = abs(Ts);
+Gain_db = 20*log10(Gain);
+phase = angle(Ts)*180/pi;
+
+
+MaxAv = max(Gain_db)
+  low = 0;
+for i=1:length(Gain_db)
+	if (Gain_db(i) >= MaxAv-3 && !low)
+	  %lowCOf = (f(i)+f(i-1))/2
+	  lowCOf = f(i-1)
+	    low = 1;
+	endif
+	if (Gain_db(i) <= MaxAv-3 && low)
+	  %highCOf = (f(i)+f(i-1))/2
+	  highCOf = f(i-1)
+	    low = 0;
+	endif
+	if(Gain_db(i) == MaxAv)
+	  Maxf = f(i)
+	endif
+endfor
+
+centralFreq = sqrt(lowCOf*highCOf)	
+	
+hf = figure ();
+
+plot(log10(f), phase, "-", log10(f), Gain_db, "-")
+hold
+
+title("Frequency response")
+xlabel ("log10(f) [Hz]")
+legend("phase [deg]", "gain [dB]")
+print (hf,"gain.eps", "-depsc");
+close(hf);
+
+
 
 ff = fopen("tabz.tex","w");
 fprintf(ff,"\\begin{tabular}{cc}\n");
 fprintf(ff,"\\toprule\n");
 fprintf(ff," & Value\\\\ \\midrule\n");
-fprintf(ff,"$Z_{I_1}$ & %.5e \\\\\n", ZI1);
-fprintf(ff,"$Z_{O_1}$ & %.5e \\\\\n", ZO1);
-fprintf(ff,"$Z_{I_2}$ & %.5e \\\\\n", ZI2);
-fprintf(ff,"$Z_{O_2}$ & %.5e \\\\\n", ZO2);
-fprintf(ff,"$Z_{I_{total}}$ & %.5e \\\\\n", ZI);
-fprintf(ff,"$Z_{O_{total}}$ & %.5e \\\\\n", ZO);
-fprintf(ff,"$Gain_1$ & %6f \\\\\n", AV1);
-fprintf(ff,"$Gain_2$ & %6f \\\\\n", AV2);
-fprintf(ff,"$Gain_{total}$ & %6f \\\\\n", AV);
-fprintf(ff,"$Gain_{total}\\ (dB)$ & %6f \\\\ \\bottomrule\n", AV_DB);
+fprintf(ff,"$LowFreq$ & %6f \\\\\n", lowCOf);
+fprintf(ff,"$HighFreq$ & %6f \\\\\n", highCOf);
+fprintf(ff,"$CentralFreq$ & %6f \\\\\n", centralFreq);
+fprintf(ff,"$Z_{I}$ & %6f \\\\\n", Zip);
+fprintf(ff,"$Z_{O}$ & %6f \\\\\n", Zop);
+fprintf(ff,"$Gain$ & %6f \\\\\n", Gainp);
+fprintf(ff,"$Gain\\ (dB)$ & %6f \\\\ \\bottomrule\n", Gainp_db);
 fprintf(ff,"\\end{tabular}");
 fclose(ff);
-  
-ff = fopen("tabtotal.tex","w");
-fprintf(ff,"$Z_{I_1}$ & %6f \\\\ \\hline\n", ZI1);
-fprintf(ff,"$Z_{O_1}$ & %6f \\\\ \\hline\n", ZO1);
-fprintf(ff,"$Z_{I_2}$ & %6f \\\\ \\hline\n", ZI2);
-fprintf(ff,"$Z_{O_2}$ & %6f \\\\ \\hline\n", ZO2);
-fprintf(ff,"$Z_{I_{total}}$ & %6f \\\\ \\hline\n", ZI);
-fprintf(ff,"$Z_{O_{total}}$ & %6f \\\\ \\hline\n", ZO);
-fprintf(ff,"$Gain_1$ & %6f \\\\ \\hline\n", AV1);
-fprintf(ff,"$Gain_2$ & %6f \\\\ \\hline\n", AV2);
-fprintf(ff,"$Gain_{total}$ & %6f \\\\ \\hline\n", AV);
-fprintf(ff,"$Gain_{total}\\ (dB)$ & %6f \\\\ \\cline{2-2}\n", AV_DB);
+
+
+
+ff = fopen("tab-line1.tex","w");
+fprintf(ff,"$LowFreq$ & %6f \n", lowCOf);
+fclose(ff);
+
+ff = fopen("tab-line2.tex","w");
+fprintf(ff,"$HighFreq$ & %6f \n", highCOf);
+fclose(ff);
+
+ff = fopen("tab-line3.tex","w");
+fprintf(ff,"$CentralFreq$ & %6f \n", centralFreq);
+fclose(ff);
+
+ff = fopen("tab-line4.tex","w");
+fprintf(ff,"$Z_{I}$ & %6f \n", Zip);
+fclose(ff);
+
+ff = fopen("tab-line5.tex","w");
+fprintf(ff,"$Z_{O}$ & %6f \n", Zop);
+fclose(ff);
+
+ff = fopen("tab-line6.tex","w");
+fprintf(ff,"$Gain$ & %6f \n", Gainp);
+fclose(ff);
+
+ff = fopen("tab-line7.tex","w");
+fprintf(ff,"$Gain\\ (dB)$ & %6f \n", Gainp_db);
 fclose(ff);

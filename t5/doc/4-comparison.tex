@@ -1,66 +1,29 @@
-\clearpage
 \section{Comparison}
 \label{sec:comparison}
 
-Comparing the results achieved in the simulation, Table~\ref{tab:op-teo}, and in the
-theoretical analysis, Table~\ref{tab:op-sim}, for the operating point, it is possible to see a small difference.
+Comparing the results achieved in the simulation and in the theoretical analysis, Table~\ref{tab:comp} and Figures~\ref{fig:votf} and \ref{fig:gain}, it is possible to see some differences: gain and phase differ for frequencies greater than the central frequency.
 
-This discrepancy may have resulted from the non-linearity of the transistors.\\
-
-\begin{minipage}[b]{0.49\textwidth}
-    \centering
-    \input{../mat/tabop}
-    \captionsetup{type=table}
-    \caption{Results for op for theoretical analysis.}
-    \label{tab:op-teo}
-\end{minipage}
-\begin{minipage}[b]{0.49\textwidth}
-    \centering
-    \begin{tabular}{|c|c|}
-      \hline    
-     \textbf{Name}  & \textbf{Value [A or V]} \\ \hline
-    \input{../sim/op-sim_tab}
-    \end{tabular}
-    \captionsetup{type=table}
-    \caption{Results for op for simulation analysis.}
-    \label{tab:op-sim}
-\end{minipage}
-
-
-Comparing the results achieved in the simulation and in the theoretical analysis, Table~\ref{tab:comp} and Figures~\ref{fig:votf} and \ref{fig:gain}, it is possible to see some differences.
-
-This discrepancy may have resulted from the non-linearity of the transistors, as shown from the behaviour for high frequencies. This may have resulted from the fact that the theoretical analysis uses a linear transistor model, meanwhile the Ngspice simulates a real circuit therefore makes a better approximation to the real transistor model.\\
+This discrepancy may have resulted from assuming an ideal op-amp model in the theoretical analysis, as shown from the behaviour for high frequencies.\\
 
 
 \begin{table}[ht!]
   \centering
-\begin{minipage}[b]{0.59\textwidth}
-    \flushright
-    \begin{tabular}{|c|c|}
+    \begin{tabular}{|c|c|c|}
       \hline    
-       & \textbf{Theoretical} \\ \hline
-      \input{../mat/tabtotal}
-      \input{../mat/tabNaugly}
+       & \textbf{Theoretical} & \textbf{Simulation} \\ \hline
+      \input{../mat/tab-line1} & \input{../sim/freq1_tab}
+      \input{../mat/tab-line2} & \input{../sim/freq2_tab}
+      \input{../mat/tab-line3} & \input{../sim/freq3_tab}
+      \input{../mat/tab-line4} & \input{../sim/zin_tab}
+      \input{../mat/tab-line5} & \input{../sim/zout_tab}
+      \input{../mat/tab-line6} & \input{../sim/gain1_tab}
+      \input{../mat/tab-line7} & \input{../sim/gain2_tab}
     \end{tabular}
-\end{minipage}
-\begin{minipage}[b]{0.39\textwidth}
-\flushleft
-   \begin{tabular}{c|}
-    \hline    
-    \textbf{Simulation} \\ \hline
-    - \\ \hline
-    - \\ \hline
-    - \\ \hline
-    - \\ \hline
-    \input{../sim/zin_tab}
-    \input{../sim/zout_tab}
-    - \\ \hline
-    - \\ \hline
-    \input{../sim/gain_tab}
-    - \\ \hline
-    \input{../sim/freq_tab}
-   \end{tabular}
-\end{minipage}
 \caption{Comparison between theoretical and simulation values}
 \label{tab:comp}
 \end{table}
+
+
+\subsection{Practical analysis}
+
+{\color{red}\huge VALORES MEDIDOs}

@@ -35,7 +35,7 @@ set hcopypscolor=0
 set color0=white
 set color1=black
 set color2=red
-set color3=blue
+set color3=rgb:0/9/9
 set color4=violet
 set color5=rgb:3/8/0
 set color6=rgb:4/0/0
@@ -51,11 +51,18 @@ set color6=rgb:4/0/0
 *hardcopy lab-vo1.ps v(vo) v(vin)
 *print v(vin)[45] v(vo)[45]
 
-* frequency analysis
+
+
+
+echo ""
+echo "**********************"
+echo "* frequency analysis *"
+echo "**********************"
+
 ac dec 10 10 100k
 *plot vdb(out)
 *plot vp(out)
-hardcopy lab-vo1f.ps vdb(vo)
+hardcopy lab-vo1f.ps vdb(vo) vp(vo)*180/pi
 
 
 echo ""
@@ -73,6 +80,7 @@ let voltG3 = voltGainDB-3
 *print voltG3
 
 meas ac lowCOf WHEN Av_db=voltG3
+meas ac Maxf MAX_AT Av_db
 meas ac highCOf WHEN Av_db=voltG3 CROSS=LAST
 
 let avgCOf = sqrt(lowCOf*highCOf)
@@ -104,18 +112,72 @@ echo "****************"
 echo "* relative dev *"
 echo "****************"
 
-let gain_perc = gain_deviation/40*100
-let f_perc = f_deviation/1k*100
-print gain_perc f_perc
+let gainperc = gain_deviation/40*100
+let fperc = f_deviation/1k*100
+print gainperc fperc
 
 
 echo ""
 echo "******************"
-echo "* impedance kohm *"
+echo "* impedance ohm *"
 echo "******************"
-*input impedance in kohm
-print abs(v(vin)[20]/vin#branch[20]/(-1000))
+*input impedance in ohm
+print abs(v(vin)[20]/vin#branch[20]/(-1))
 
+let Zin = v(vin)[20]/vin#branch[20]/(-1)
+let real=Re(Zin)
+let imag=Im(Zin)
+let absl=abs(Zin)
+
+
+***************************** TABLES ******************************
+echo ""
+echo "**********"
+echo "* TABLES *"
+echo "**********"
+
+echo "inputZ_TAB"
+echo "Zin = $&real + $&imag j"
+echo " $|$\ Zin $|$\ = $&absl"
+echo "inputZ_END"
+
+let CentralFreq = avgCOf
+let CentralFreqDev = f_deviation
+let gainDeviation = gain_deviation
+echo "merit_TAB"
+print voltGainDB
+print gainDeviation
+print CentralFreq
+print CentralFreqDev
+print cost
+print merit
+echo "merit_END"
+
+
+echo "zin_TAB"
+echo "$&absl"
+echo "zin_END"
+
+echo "gain1_TAB"
+echo "$&voltGain"
+echo "gain1_END"
+echo "gain2_TAB"
+echo "$&voltGainDB"
+echo "gain2_END"
+
+echo "freq1_TAB"
+echo "$&lowCOf"
+echo "freq1_END"
+echo "freq2_TAB"
+echo "$&highCOf"
+echo "freq2_END"
+echo "freq3_TAB"
+echo "$&CentralFreq"
+echo "freq3_END"
+
+echo "percentages_TAB"
+print gainperc fperc
+echo "percentages_END"
 
 
 *need a different setup to measure output impedance

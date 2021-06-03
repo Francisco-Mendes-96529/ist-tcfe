@@ -1,64 +1,17 @@
 \section{Theoretical Analysis}
 \label{sec:analysis}
 
-In this section, the circuit shown in Figure~\ref{fig:t4-equiv} is analyzed
-theoretically, according to the following steps.
+In this section, the circuit is analyzed theoretically, according to the ideal
+op-amp model ($Z_i =\infty$ and $Z_o=0$), resulting in the following equations:
 
-\subsection{Step 1}\label{subsec:step1}
-The circuit was analyzed by operating point in order to obtain the values for the components
-of the equivalent transistors, $r_{\pi}$, $r_o$ and $g_m$, as shown in
-Table~\ref{tab:op-trans-teo}.
-
-\begin{table}[ht!]
-  \centering
-  \input{../mat/tabop-trans}
-  \caption{Results obtained by theoretical operating point.}
-  \label{tab:op-trans-teo}
-\end{table}
-
-
-\subsection{Step 2}\label{subsec:step2}
-Then we calculated the impedances ($\Omega$) and gain for each stage (transistor) and for the total circuit, as shown in Table~\ref{tab:tabz}.
-
-
-\begin{table}[ht!]
-  \centering
-  \input{../mat/tabz}
-  \caption{Impedances and gain obtained.}
-  \label{tab:tabz}
-\end{table}
-
-By observation, one can say that the 2 stages can be connected without significant signal loss, because the input impedance of the second stage is much greater than the output impedance of the first stage. The same applies for the total input impedance of the circuit and the impedance of the voltage source, and for the impedance of the speaker and the total output impedance of the circuit.
-
-
-\subsection{Step 3}\label{subsec:step3}
-Next, we performed node analysis for $f \in [1; 100M]\ Hz$:
-
-\begin{equationfit}\label{step3}
-  \begin{bmatrix}
-    -G_{in}-Y_{cin} & Y_{cin} & 0 & 0 \\
-    Y_{cin} & -Y_{cin}-G_1-G_2-g_{\pi1}-Y_{be1}-Y_{bc1} & g_{\pi1}+Y_{be1} & Y_{bc1} \\
-    0 & g_{\pi1}+g_{m1}+Y_{be1} & -g_{\pi1}-G_E-Y_{cb}-g_{m1}-g_{o1}-Y_{be1} & g_{o1} \\
-    0 & -g_{m1}+Y_{bc1} & g_{m1}+g_{o1} & G_C-g_{o1}-Y_{bc1} \\
-  \end{bmatrix}
-  \begin{bmatrix}
-    v_{ib}\\
-    v_{i1}\\
-    v_{e1}\\
-    v_{o1}\\
-  \end{bmatrix}
-  =
-  \begin{bmatrix}
-    -v_{i0}G_{in}\\
-    0\\
-    0\\
-    0\\
-  \end{bmatrix}
-\end{equationfit}
-\begin{gather}
-  v_{in2} = v_{o1}\\
-  v_{e2} = \frac{g_{\pi2}+g_{m2}+Y_{be2}}{g_{\pi2}+G_O+\frac{1}{Z_{co}+R_L}+g_{m2}+g_{o2}+Y_{be2}}v_{i2}\\
-  v_{o2} = \frac{R_L}{R_L+Z_{co}}v_{e2}
+\begin{gather}\label{step}
+  |Z_i| = |Z_{C1} + R1 \parallelsum \infty| = |Z_{C1} + R1|\\
+  |Z_o| = |Z_{C2} \parallelsum (R2 + R3 \parallelsum 0)| = |Z_{C2} \parallelsum R2|\\
+  \begin{cases}
+    v_- = v_+ = \frac{R1}{R1+Z_{C1}} v_i\\
+    v_A = \left(1 + \frac{R3}{R4}\right) v_-\\
+    v_o = \frac{Z_{C2}}{Z_{C2}+R2} v_A\\
+  \end{cases}
 \end{gather}
 
 Solving the previous equations, the results are shown in Figure~\ref{fig:gain} and in Table~\ref{tab:NA}.\\
@@ -73,9 +26,9 @@ Solving the previous equations, the results are shown in Figure~\ref{fig:gain} a
 \hfill
 \begin{minipage}[b]{0.49\textwidth}
   \centering
-  \input{../mat/tabNA}
+  \input{../mat/tabz}
   \captionsetup{type=table}
-  \caption{Results obtained by node analysis.}
+  \caption{Results obtained.}
   \label{tab:NA}
 \end{minipage}
 
