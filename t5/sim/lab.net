@@ -72,9 +72,9 @@ echo "****************"
 
 * cut-off freqs
 
-let Av_db = vdb(vo)-vdb(vin)
+let Av_db = vdb(vo)
 meas ac voltGainDB MAX Av_db
-let Av_m = vm(vo)/vm(vin)
+let Av_m = vm(vo)
 meas ac voltGain MAX Av_m
 let voltG3 = voltGainDB-3
 *print voltG3
@@ -90,9 +90,9 @@ echo ""
 echo "* op-amp *"
 echo ""
 
-let in_m = vm(in_p)/vm(vin)
+let in_m = vm(in_p)
 meas ac inGain MAX in_m
-let out_m = vm(out)/vm(vin)
+let out_m = vm(out)
 meas ac outGain MAX out_m
 
 
@@ -101,11 +101,12 @@ echo "*********"
 echo "* merit *"
 echo "*********"
 
-let gain_deviation = abs(voltGainDB - 40)
+let gain_deviation = abs(voltGain - 100)
 let f_deviation = abs(avgCOf - 1k)
-let cost = (100*3 + 1*3) + (0.220*3)
-let merit = 1/(cost*gain_deviation*f_deviation)
-print gain_deviation f_deviation cost merit
+let cost_opamp = (8.661u+30u) + (5*0.1) + (2*0.1) + (100+5.305*2+1.836*2+13.19k+50m+100m+18.16)
+let cost = (100*3 + 1*3) + (0.220*3) + cost_opamp
+let merit = 1/(cost*(gain_deviation+f_deviation+1e-6))
+print gain_deviation f_deviation cost merit cost_opamp
 
 echo ""
 echo "****************"
@@ -145,7 +146,7 @@ let CentralFreq = avgCOf
 let CentralFreqDev = f_deviation
 let gainDeviation = gain_deviation
 echo "merit_TAB"
-print voltGainDB
+print voltGain
 print gainDeviation
 print CentralFreq
 print CentralFreqDev
