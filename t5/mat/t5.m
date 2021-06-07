@@ -23,7 +23,7 @@ Zc2 = 1/j/w/C2
    Gainp_db = 20*log10(Gainp)
 
 
-f = logspace(1, 5, 41);
+f = logspace(1, 8, 71);
 w = 2*pi*f;
 
 Zc1 = 1./(j*w*C1);

@@ -59,7 +59,7 @@ echo "**********************"
 echo "* frequency analysis *"
 echo "**********************"
 
-ac dec 10 10 100k
+ac dec 10 10 100000k
 *plot vdb(out)
 *plot vp(out)
 hardcopy lab-vo1f.ps vdb(vo) vp(vo)*180/pi
